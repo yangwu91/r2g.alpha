@@ -1,0 +1,3 @@
+[run]
+source = src/r2g
+omit = src/r2g/Bio/*

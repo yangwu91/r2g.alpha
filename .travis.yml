@@ -1,0 +1,34 @@
+language: python
+
+jobs:
+  include:
+  - os: linux
+    env: URL=https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh
+    python: "3.8"
+  - os: linux
+    env: URL=https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh
+    python: "3.7"
+  - os: linux
+    env: URL=https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh
+    python: "3.6"
+  - os: osx
+    osx_image: xcode10.3
+    env: URL=https://repo.continuum.io/miniconda/Miniconda3-latest-MacOSX-x86_64.sh
+    language: generic
+
+before_install:
+  - if [ "$TRAVIS_OS_NAME" = "linux" ]; then sudo apt-get install libxml-libxml-perl; fi
+  - bash ./.travis_before_install.sh $URL
+  - if [ "$TRAVIS_OS_NAME" = "linux" ]; then export PATH=$PATH:$PWD/miniconda3/bin; fi
+  - if [ "$TRAVIS_OS_NAME" = "osx" ]; then export PATH=$PWD/miniconda3/bin:$PWD/trinityrnaseq-Trinity-v2.8.5:$PATH; export TRINITY_HOME=$PWD/trinityrnaseq-Trinity-v2.8.5; fi
+
+install: 
+  - pip install .
+
+script:
+  - coverage run setup.py test
+ 
+after_success:
+  - coverage xml
+  - codecov --file coverage.xml -X pycov -X gcov
+  - coveralls

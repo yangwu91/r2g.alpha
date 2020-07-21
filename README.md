@@ -1,6 +1,6 @@
-![PyPI](https://img.shields.io/pypi/v/r2g?logo=pypi&style=plastic) ![pyver](https://img.shields.io/pypi/pyversions/r2g?logo=python&style=plastic) ![travis](https://img.shields.io/travis/yangwu91/r2g?logo=travis&style=plastic) ![Codecov](https://img.shields.io/codecov/c/gh/yangwu91/r2g?logo=codecov&style=plastic) ![docker](https://img.shields.io/docker/cloud/build/yangwu91/r2g?logo=docker&style=plastic)
+![PyPI](https://img.shields.io/pypi/v/r2g.alpha?logo=pypi&style=plastic) ![pyver](https://img.shields.io/pypi/pyversions/r2g.alpha?logo=python&style=plastic) ![travis](https://img.shields.io/travis/yangwu91/r2g.alpha?logo=travis&style=plastic) ![Codecov](https://img.shields.io/codecov/c/gh/yangwu91/r2g.alpha?logo=codecov&style=plastic) ![docker](https://img.shields.io/docker/cloud/build/yangwu91/r2g.alpha?logo=docker&style=plastic)
 
-<div align=center><img src="https://raw.githubusercontent.com/yangwu91/r2g/master/docs/icon.png" alt="icon"/></div>
+<div align=center><img src="https://raw.githubusercontent.com/yangwu91/r2g.alpha/master/docs/icon.png" alt="icon"/></div>
 
 # Reads to Genes (r2g)
 
@@ -90,13 +90,13 @@ We applied the r2g pipeline to search the gene *S6K* (`AAEL018120` from *Aedes a
 
 Download nucleotide/protein sequences of *Aedes aegypti S6K* from VectorBase, Ensembl, NCBI or other online databases, and let’s say it was saved as the file `/opt/data/AAEL018120-RE.S6K.fasta`.
 
-![lure](https://raw.githubusercontent.com/yangwu91/r2g/master/docs/20191024163424.png)
+![lure](https://raw.githubusercontent.com/yangwu91/r2g.alpha/master/docs/20191024163424.png)
 
 ### Select a public SRA database for the species to be investigated
 
 Select a proper SRA experiment for *Aedes albopictus* (e.g. `SRX885420`). Some genes only express in specific tissues or at specific time. Make sure the gene you are interested in indeed expresses in the SRA experiment(s) you selected.
 
-![fishing spot](https://raw.githubusercontent.com/yangwu91/r2g/master/docs/20191024155211.png)
+![fishing spot](https://raw.githubusercontent.com/yangwu91/r2g.alpha/master/docs/20191024155211.png)
 
 ### Run the r2g pipeline
 

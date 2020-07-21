@@ -12,7 +12,7 @@ RUN conda config --add channels bioconda && \
     # Trinity and sratoolkit:
     conda install -yq trinity=$TRINITY_VER sra-tools=$SRA_VER numpy && \
     # r2g:
-    git clone https://github.com/yangwu91/r2g.git && \
+    git clone https://github.com/yangwu91/r2g.alpha.git && \
     cd r2g && \
     pip install -q . && \
     # Clean:

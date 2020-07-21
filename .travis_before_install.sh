@@ -14,7 +14,7 @@ if [ "$TRAVIS_OS_NAME" = "osx" ]; then
 	wget -qO /tmp/trinity.tar.gz https://github.com/trinityrnaseq/trinityrnaseq/archive/Trinity-v${TRINITY}.tar.gz
 	tar -zxvf /tmp/trinity.tar.gz && cd trinityrnaseq-Trinity-v${TRINITY}
 	export PATH=/usr/local/bin:$PATH
-	make CXX=g++-9 CC=gcc-9 && make plugins plugins CXX=g++-9 CC=gcc-9 && cd ..
+	make CXX=g++-9 CC=gcc-9 && make plugins CXX=g++-9 CC=gcc-9 && cd ..
 	conda install -qy numpy coverage codecov python-coveralls sra-tools=$SRA bowtie2=2.3.5 jellyfish=2.2.10 salmon=1.0.0 samtools=1.9 python=$PYTHON
 fi
 

@@ -17,7 +17,7 @@ class TestMain(unittest.TestCase):
     def setUp(self):
         self.args = {'verbose': False, 'retry': float('inf'), 'outdir': 'OUTPUT', 'sra': 'SRXNNNNNN', 'query': 'ATGC',
                      'program': 'blastn', 'max_num_seq': 1000, 'evalue': 0.001, 'cut': '80,50', 'CPU': 4,
-                     'max_memory': '5G', 'min_contig_length': 150, 'KMER_SIZE': 25, 'full_cleanup': False,
+                     'max_memory': '4G', 'min_contig_length': 150, 'KMER_SIZE': 25, 'full_cleanup': False,
                      'trim': False, 'stage': 'butterfly'}
         self.config_files = [
             os.path.abspath(os.path.join(r2g.__path__[0], "path.json")),

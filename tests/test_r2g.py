@@ -1,8 +1,8 @@
 #!/usr/bin/env python
 
 import unittest
-from HR import main
-from HR.online import blast
+from r2g import main
+from r2g.online import blast
 
 aae_rps7 =""">AAEL009496-RA_RPS7
 CCCCCATCGGACAGCTGTCAGTAAACGCAAACTCGCTCGAACTTCCGCCCAACTGTCTGT

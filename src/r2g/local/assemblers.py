@@ -17,7 +17,7 @@ class Trinity:
             "--max_memory", args["max_memory"],
             "--CPU", str(args['CPU']),
             "--min_contig_length", str(args["min_contig_length"]),
-            # "--KMER_SIZE", str(args["KMER_SIZE"]), # Doesn't work on Trinity >2.6.6 or <1.10.0
+            # "--KMER_SIZE", str(args["KMER_SIZE"]), # Doesn't work on Trinity >2.6.6 or <2.10.0
             "--output", self.output
         ]
         if paired:

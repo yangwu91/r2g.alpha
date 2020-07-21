@@ -18,7 +18,7 @@ class TestAssemblers(unittest.TestCase):
                 'CPU': 2,
                 'max_memory': '4G',
                 'min_contig_length': 150,
-                'KMER_SIZE': 25,
+                # 'KMER_SIZE': 25,
                 'full_cleanup': False,
                 'trim': False,
                 'stage': 'butterfly'

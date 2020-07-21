@@ -17,7 +17,6 @@ class TestBlast(unittest.TestCase):
                            "AATCATTCCATTGATTAGACGATGGTTACACTTGGTTCACGTCGTGCGCGTTTCCCGTGT\n" \
                            "TCCCTCTAGACGTAGAAGTGTTGGACTTTTTTTTTTGGGTGTTGTGCTGCTATAAGCTGC\n" \
                            "TACTGCTGATTGAGGAAATT\n"
-
         self.args = {
             'query': self.query_fasta,
             'sra': 'SRX885420',
@@ -44,14 +43,12 @@ class TestBlast(unittest.TestCase):
 
     def test_query(self):
         main.log("Testing r2g.online.blast query.")
-
         try:
             name, download_list = blast.query(self.args)
             assertion = (name == 'some_gene' and len(download_list.get('SRR1812889', [])) > 0)
         except Exception as err:
             assertion = False
             main.log("Error occurred while testing: {}".format(err))
-
         self.assertTrue(assertion)
 
     def test_format_seq_1(self):

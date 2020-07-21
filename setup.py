@@ -26,7 +26,6 @@ setup(
     packages=[
         "r2g.main",
         "r2g.Bio",
-        "r2g.Bio._py3k",
         "r2g.local",
         "r2g.online"
     ],

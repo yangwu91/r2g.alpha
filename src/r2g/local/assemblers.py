@@ -69,6 +69,8 @@ class Trinity:
                             if len(line) == 0:
                                 break
                             outf.write(main.bytes2str(line))
+                            if self.args['verbose']:
+                                print(line)
                         # sys.stdout.write(line)
                 p.wait()
                 if p.returncode != 0:
@@ -80,9 +82,6 @@ class Trinity:
                     main.log("Trinity done.")
                 return self.output
         except Exception as err:
-            if self.args['verbose']:
-                with open(self.log, 'r') as logfile:
-                    print(logfile.read())
             raise errors.AssembleError("Errors raised when called Trinity. {}. "
                                        "Please check the Trinity log above".format(err))
 

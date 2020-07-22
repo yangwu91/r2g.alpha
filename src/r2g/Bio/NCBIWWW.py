@@ -95,6 +95,7 @@ def qblast(
     template_type=None,
     template_length=None,
     organisms=None,
+    max_num_seq=500
 ):
     """BLAST search using NCBI's QBLAST server or a cloud service provider.
 
@@ -207,6 +208,7 @@ def qblast(
         ("THRESHOLD", threshold),
         ("UNGAPPED_ALIGNMENT", ungapped_alignment),
         ("WORD_SIZE", word_size),
+        ('MAX_NUM_SEQ', max_num_seq),
         ("CMD", "Put"),
     ]
     if organisms is not None:
@@ -218,7 +220,7 @@ def qblast(
     # Note the NCBI do not currently impose a rate limit here, other
     # than the request not to make say 50 queries at once using multiple
     # threads.
-    request = Request(url_base, message, {"User-Agent": headers})
+    request = Request(url_base, message, {"User-Agent": headers["User-Agent"]})
     handle = urlopen(request)
 
     # Format the "Get" command, which gets the formatted results from qblast
@@ -270,7 +272,7 @@ def qblast(
             # Wasn't a quick return, must wait at least a minute
             delay = 60
 
-        request = Request(url_base, message, {"User-Agent": headers})
+        request = Request(url_base, message, {"User-Agent": headers["User-Agent"]})
         handle = urlopen(request)
         results = handle.read().decode()
 

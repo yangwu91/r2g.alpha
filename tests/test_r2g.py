@@ -32,10 +32,10 @@ args_dict = {
     'cut': '50,20',
     'retry': 5,
     'CPU': 8,
-    'max_memory': '5G',
+    'max_memory': '4G',
     'min_contig_length': 150,
-    'KMER_SIZE': 25,
-    'full_cleanup': False,
+    #'KMER_SIZE': 25,
+    'cleanup': False,
     'trim': False,
     'stage': 'butterfly'
 }

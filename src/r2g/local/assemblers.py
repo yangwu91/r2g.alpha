@@ -80,8 +80,11 @@ class Trinity:
                     main.log("Trinity done.")
                 return self.output
         except Exception as err:
-            raise errors.AssembleError("Errors raised when called Trinity. "
-                                       "{}".format(err))
+            if self.args['verbose']:
+                with open(self.log, 'r') as logfile:
+                    print(logfile.read())
+            raise errors.AssembleError("Errors raised when called Trinity. {}. "
+                                       "Please check the Trinity log above".format(err))
 
     def copyto(self, final_result):
         if self.args['stage'] == 'chrysalis' or \

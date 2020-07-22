@@ -24,7 +24,7 @@ from urllib.request import urlopen
 from urllib.parse import urlencode
 from urllib.request import Request
 
-from Bio import BiopythonWarning
+from r2g.Bio import BiopythonWarning
 
 
 NCBI_BLAST_URL = "https://blast.ncbi.nlm.nih.gov/Blast.cgi"
@@ -33,7 +33,7 @@ headers = {
         "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
                       "AppleWebKit/537.36 (KHTML, like Gecko) "
                       "Chrome/77.0.3865.90 Safari/537.36"
-               }
+}
 
 
 def _add_organism(organisms):

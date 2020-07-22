@@ -13,7 +13,7 @@ class TestAssemblers(unittest.TestCase):
         self.output_dir = tempfile.mkdtemp(prefix="r2g-test_tmp_")
         self.args = {
                 'query': "ATGC",
-                'verbose': False,
+                'verbose': True,
                 'outdir': self.output_dir,
                 'CPU': 2,
                 'max_memory': '4G',
@@ -21,7 +21,7 @@ class TestAssemblers(unittest.TestCase):
                 # 'KMER_SIZE': 25,
                 'full_cleanup': False,
                 'trim': False,
-                'stage': 'butterfly'
+                'stage': 'butterfly',
             }
         self.fastq_list = {
                 "1": ['{}/data/sample1_1.fastq.gz'.format(self.fastq_dir),
@@ -44,7 +44,7 @@ class TestAssemblers(unittest.TestCase):
 
     def test_trinity_singled_1(self):
         paired = False
-        self.args["verbose"] = True
+        #self.args["verbose"] = True
         self.args['full_cleanup'] = True
         self.args['trim'] = True
         app_json = main.preflight(self.args)
@@ -57,7 +57,7 @@ class TestAssemblers(unittest.TestCase):
 
     def test_trinity_singled_2(self):
         paired = False
-        self.args["verbose"] = True
+        #self.args["verbose"] = True
         self.args['full_cleanup'] = True
         self.args['trim'] = "SLIDINGWINDOW:4:5 LEADING:5 TRAILING:5 MINLEN:25"
         del self.fastq_list['2']

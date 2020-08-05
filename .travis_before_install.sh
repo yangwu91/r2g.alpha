@@ -1,8 +1,8 @@
 #!/bin/bash
 
-TRINITY=2.9.1
+TRINITY=2.8.5
 SRA=2.10.8
-PYTHON=3.8.4
+PYTHON=3.8.5
 
 wget -qO /tmp/miniconda.sh $1
 bash /tmp/miniconda.sh -bfp $PWD/miniconda3
@@ -16,11 +16,11 @@ if [ "$TRAVIS_OS_NAME" = "osx" ]; then
 	export PATH=/usr/local/bin:$PATH
 	make CXX=g++-9 CC=gcc-9 && make plugins CXX=g++-9 CC=gcc-9 && cd ..
 	#conda install -qy numpy coverage codecov python-coveralls sra-tools=$SRA bowtie2=2.4.1 kmer-jellyfish=2.3.0 salmon=1.3.0 samtools=1.10 python=$PYTHON
-	conda install -qy numpy coverage codecov python-coveralls sra-tools=$SRA bowtie2 kmer-jellyfish salmon samtools python=$PYTHON
+	conda install -qy sra-tools=$SRA python=$PYTHON selenium numpy requests coverage codecov python-coveralls bowtie bowtie2 kmer-jellyfish salmon samtools trimmomatic
 fi
 
 if [ "$TRAVIS_OS_NAME" = "linux" ]; then
-	conda install -qy numpy coverage codecov python-coveralls sra-tools=$SRA trinity=$TRINITY 
+	conda install -qy sra-tools=$SRA trinity=$TRINITY numpy requests selenium coverage codecov python-coveralls
 fi
 
 conda clean -ayq

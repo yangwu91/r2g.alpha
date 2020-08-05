@@ -3,11 +3,11 @@ from __future__ import division
 import os
 import time
 from copy import deepcopy
+import xml.etree.ElementTree as ET
 
-from r2g import main
-from r2g.Bio import NCBIWWW
+from r2g import utils
+from r2g.online import NCBIWWW_selenium
 from r2g import errors
-import xml.etree.cElementTree as ET
 
 
 def _cut_seq(name, seq, args):
@@ -128,9 +128,8 @@ def _parse_xml(raw_results, args):
             err = str(e)
             r += 1
             print(raw_results)
-            main.log("WARNING: couldn't get results from NCBI due to "
-                     "temporary errors. Retrying...",
-                     args['verbose'], 'debug')
+            utils.log("\033[1;33mWARNING:\033[0m couldn't get results from NCBI due to temporary errors. Retrying...",
+                      args['verbose'], 'debug')
         else:
             Iterations = results_tree.find(
                 'BlastOutput_iterations'
@@ -151,8 +150,8 @@ def _parse_xml(raw_results, args):
             err = ""
             break
     if len(err) > 0:
-        main.log("WARNING: couldn't get results for from NCBI due to "
-                 "temporary errors. The fragment was skipped.")
+        utils.log("\033[1;33mWARNING:\033[0m couldn't get results for from NCBI due to temporary errors. "
+                  "The fragment was skipped.")
         if args['verbose']:
             with open(
                     os.path.join(
@@ -163,73 +162,69 @@ def _parse_xml(raw_results, args):
     return download_list
 
 
-def query(args, url="https://blast.ncbi.nlm.nih.gov/Blast.cgi"):
+def query(args, webdriver):
     download_list = {}
     name, seq_chunks = _format_seq(args)
-    main.log(seq_chunks, args['verbose'], 'debug')
+    utils.log(seq_chunks, args['verbose'], 'debug')
     SRAs = {}.fromkeys(args['sra'].strip().split(',')).keys()
+    formatted_SRAs = NCBIWWW_selenium.check_sra_validity(SRAs, proxy=args["proxy"])
+    # formatted_SRAs = {species1: {srx1: [srr...], srx2: [srr...]}, species2: ...}
     interval = 10
-    for srx in SRAs:
-        current = 0
-        for chunk in seq_chunks:
-            current += 1
-            main.processing(current,
-                            len(seq_chunks),
-                            "Submitting queries to {} against the database {}"
-                            .format(args['program'], srx),
-                            "percent")
-            r = -1
-            err = ''
-            while r < int(args['retry']):
-                # https://blast.ncbi.nlm.nih.gov/Blast.cgi?CMD=Web&PAGE_
-                # TYPE=BlastDocs&DOC_TYPE=DeveloperInfo
-                # Do not contact the server more often than once every 10
-                # seconds:
-                if interval < 10:
-                    time.sleep(11 - interval)
-                start_time = time.time()
+    for i in formatted_SRAs.items():
+        for j in i[-1].items():
+            srx = j[0]
+            srr = ','.join(j[-1])
+            current = 0
+            for chunk in seq_chunks:
+                current += 1
+                utils.processing(
+                    current,
+                    len(seq_chunks),
+                    "\033[1;32m{}\033[0m - {} \033[1;37m({})\033[0m".format(i[0], srx, srr),
+                    "percent"
+                )
+                r = -1
+                err = ''
+                while r < int(args['retry']):
+                    # Do not contact the server more often than once every 10 seconds:
+                    if interval < 10:
+                        time.sleep(11 - interval)
+                    start_time = time.time()
+                    if len(err) > 0:
+                        utils.log("Retrying...", shift="\n")
+                    try:
+                        result = NCBIWWW_selenium.qblast(
+                            program=args["program"],
+                            srx=srx,
+                            query=chunk,
+                            max_num_seq=(args["max_num_seq"] // (len(seq_chunks) * 20) + 1),
+                            expect=args["evalue"],
+                            # format_type='Tabular'
+                            # Don't know why the number of returned hits can't be determined when the format is Tabular.
+                            # So the XML format is required:
+                            format_type='XML',
+                            browser=webdriver,
+                            proxies=(args["chrome_proxy"], args["proxy"]),
+                            verbose=args["verbose"]
+                        )
+                        if args['verbose']:
+                            with open(os.path.join(args['outdir'], "{}.xml".format(srx)), 'w') as outf:
+                                outf.write(result)
+                    except Exception as e:
+                        err = str(e)
+                        r += 1
+                        utils.log("Error msg while querying: {}.".format(err), shift="\n")
+                    else:
+                        err = ''
+                        break
                 if len(err) > 0:
-                    main.log("Retrying...")
-                try:
-                    result = NCBIWWW.qblast(
-                        program=args["program"],
-                        database="sra",
-                        sequence=chunk,
-                        url_base=url,
-                        organisms=srx,
-                        filter="F",
-                        max_num_seq=(
-                            args["max_num_seq"] // (len(seq_chunks) * 20) + 1
-                        ),
-                        expect=args["evalue"],
-                        megablast=None,
-                        # format_type='Tabular'
-                        # Don't know why the number of returned hits can't be
-                        # determined when the format is Tabular. So the XML
-                        # format is required:
-                        format_type='XML'
-                    ).read()
-                    if args['verbose']:
-                        with open(os.path.join(
-                                args['outdir'],
-                                "{}.xml".format(srx)), 'w') as outf:
-                            outf.write(result)
-                except Exception as e:
-                    err = str(e)
-                    r += 1
-                    main.log("Error msg while querying: {}.".format(err))
+                    raise errors.QueryError("Couldn't get results from NCBI. Errors above must be investigated.")
                 else:
-                    err = ''
-                    break
-            if len(err) > 0:
-                raise errors.QueryError("Couldn't get results from NCBI. "
-                                        "Errors above must be investigated.")
-            else:
-                result = _parse_xml(result, args)
-                for sra in result.keys():
-                    spots = deepcopy(download_list.get(sra, []))
-                    spots += result[sra]
-                    download_list[sra] = deepcopy(spots)
-                interval = time.time() - start_time
+                    result = _parse_xml(result, args)
+                    for sra in result.keys():
+                        spots = deepcopy(download_list.get(sra, []))
+                        spots += result[sra]
+                        download_list[sra] = deepcopy(spots)
+                    interval = time.time() - start_time
     download_list = _clear_up_list(download_list)
     return name, download_list

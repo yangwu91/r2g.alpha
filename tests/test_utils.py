@@ -9,51 +9,69 @@ from stat import S_IWUSR, S_IREAD, S_IRGRP, S_IROTH
 from copy import deepcopy
 
 import r2g
-from r2g import main
+from r2g import utils
 from r2g import errors
 
 
 class TestMain(unittest.TestCase):
     def setUp(self):
-        self.args = {'verbose': False, 'retry': float('inf'), 'outdir': 'OUTPUT', 'sra': 'SRXNNNNNN', 'query': 'ATGC',
-                     'program': 'blastn', 'max_num_seq': 1000, 'evalue': 0.001, 'cut': '80,50', 'CPU': 4,
-                     'max_memory': '4G', 'min_contig_length': 150, 'cleanup': False, 'trim': False,
-                     'stage': 'butterfly'}
+        self.args = {
+            'CPU': 4,
+            'browser': None,
+            'chrome_proxy': None,
+            'cleanup': False,
+            'cut': '80,50',
+            'docker': False,
+            'evalue': 0.001,
+            'firefox_proxy': None,
+            'max_memory': '4G',
+            'max_num_seq': 1000,
+            'min_contig_length': 150,
+            'outdir': 'OUTPUT',
+            'program': 'blastn',
+            'proxy': None,
+            'query': 'ATGC',
+            'retry': float('inf'),
+            'sra': 'SRXNNNNNN',
+            'stage': 'butterfly',
+            'trim': False,
+            'verbose': False
+        }
         self.config_files = [
             os.path.abspath(os.path.join(r2g.__path__[0], "path.json")),
             os.path.abspath(os.path.join(os.path.expanduser('~'), ".r2g.path.json"))
         ]
         self.path = deepcopy(os.environ['PATH'])
-        self.app_json = main.preflight(self.args)
+        self.app_json = utils.preflight(self.args)
         self.pwd = os.getcwd()
 
     def test_parse_args(self):
-        main.log("Testing r2g.main.preflight _parse_args")
+        utils.log("Testing r2g.utils.utils _parse_args")
         raw_args = "-o OUTPUT -s SRXNNNNNN -q ATGC --cut 80,50 -p blastn --CPU 4 --retry"
         raw_args = raw_args.split()
-        parsed_args = main.parse_arguments(raw_args, "0.0.1")
+        parsed_args = utils.parse_arguments(raw_args)
         self.assertEqual(parsed_args, self.args)
 
     def test_check_sequences(self):
-        main.log("Testing r2g.main.preflight _check_sequences")
+        utils.log("Testing r2g.utils.utils _check_sequences")
         query_file = tempfile.mkstemp(suffix=".fasta", prefix="r2g-test_tmp_", text=True)[-1]
         with open(query_file, 'w') as outf:
             # a fake fasta with a wrong character ("!")
             outf.write(">some_gene\nATGC!\n")
         self.args['query'] = query_file
         with self.assertRaises(errors.InputError):
-            _ = main.preflight(self.args)
-        os.remove(query_file)
+            _ = utils.preflight(self.args)
+        utils.remove_anything(query_file)
 
     def test_check_apps(self):
-        main.log("Testing r2g.main.preflight configure files.")
+        utils.log("Testing r2g.utils.utils configure files.")
         changing_app_json = deepcopy(self.app_json)
         # SITUATION 1: apps are not in $PATH and config_files[0] is configured.
         os.environ['PATH'] = '/usr/bin'
         os.chmod(self.config_files[0], S_IWUSR | S_IREAD)
         with open(self.config_files[0], 'w') as outf:
             json.dump(self.app_json, outf, indent=4, separators=(',', ': '))
-        parsed_app_json = main.preflight(self.args)
+        parsed_app_json = utils.preflight(self.args)
         if parsed_app_json == self.app_json:
             assertion1 = True
         else:
@@ -74,10 +92,12 @@ class TestMain(unittest.TestCase):
         choose_yes = mock.Mock(return_value=True)
         trinity_dir = mock.Mock(return_value=self.app_json['Trinity'])
         fastq_dump_dir = mock.Mock(return_value=self.app_json['fastq-dump'])
-        main._ask_yes_or_no = choose_yes
-        main._input_trinity_dir = trinity_dir
-        main._input_fastq_dump_dir = fastq_dump_dir
-        parsed_app_json = main.preflight(self.args)
+        chromedriver_dir = mock.Mock(return_value=self.app_json['chromedriver'])
+        utils._ask_yes_or_no = choose_yes
+        utils._input_trinity_dir = trinity_dir
+        utils._input_fastq_dump_dir = fastq_dump_dir
+        utils._input_webdriver_dir = chromedriver_dir
+        parsed_app_json = utils.preflight(self.args)
         with open(self.config_files[1], 'r') as inf:
             read_app_json = json.load(inf)
         if parsed_app_json == self.app_json and read_app_json == self.app_json:

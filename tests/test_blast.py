@@ -6,7 +6,7 @@ import json
 import shutil
 import os
 
-from r2g import main
+from r2g import utils
 from r2g.online import blast
 from r2g import errors
 
@@ -26,34 +26,38 @@ class TestBlast(unittest.TestCase):
             'max_num_seq': 1000,
             'evalue': 0.001,
             'verbose': True,
-            'retry': 5
+            'retry': 5,
+            'proxy': None,
+            'chrome_proxy': None,
+            'firefox_proxy': None,
+            'browser': None,
         }
 
     def test_query_cut_error_1(self):
-        main.log("Raising r2g.online.blast query Error 1.")
+        utils.log("Raising r2g.online.blast query Error 1.")
         self.args["cut"] = "7,31"
         with self.assertRaises(errors.InputError):
-            _, _ = blast.query(self.args)
+            _, _ = blast.query(self.args, "http://127.0.0.1:4444/wd/hub")
 
     def test_query_cut_error_2(self):
-        main.log("Raising r2g.online.blast query Error 2.")
+        utils.log("Raising r2g.online.blast query Error 2.")
         self.args["cut"] = "X,J"
         with self.assertRaises(errors.InputError):
-            _, _ = blast.query(self.args)
+            _, _ = blast.query(self.args, "http://127.0.0.1:4444/wd/hub")
 
     def test_query(self):
-        main.log("Testing r2g.online.blast query.")
+        utils.log("Testing r2g.online.blast query.")
         try:
-            name, download_list = blast.query(self.args)
+            name, download_list = blast.query(self.args, os.environ["PRIVATE_WEBDRIVER"])
             assertion = (name == 'some_gene' and len(download_list.get('SRR1812889', [])) > 0)
         except Exception as err:
             assertion = False
-            main.log("Error occurred while testing: {}".format(err))
+            utils.log("Error occurred while testing: {}".format(err))
         self.assertTrue(assertion)
 
     def test_format_seq_1(self):
         # Test 1 (total_length = 169, num_frag = 3):
-        main.log("Testing r2g.online.blast _format_seq 1.")
+        utils.log("Testing r2g.online.blast _format_seq 1.")
         self.query_fasta = self.query_fasta.strip().split('\n', 1)[1] + 29 * "A"
         self.args['query'] = self.query_fasta
         name, seq = blast._format_seq(self.args)
@@ -74,7 +78,7 @@ class TestBlast(unittest.TestCase):
 
     def test_format_seq_2(self):
         # Test 2:
-        main.log("Testing r2g.online.blast _format_seq 2.")
+        utils.log("Testing r2g.online.blast _format_seq 2.")
         query_file = tempfile.mkstemp(suffix=".fasta", prefix="r2g-test_tmp_", text=True)[-1]
         fasta = ">{}\n{}\n>{}\n{}\n".format(
             "A",
@@ -100,7 +104,7 @@ class TestBlast(unittest.TestCase):
         self.assertTrue(assertion)
 
     def test_parse_xml(self):
-        main.log("Testing r2g.online.blast _parse_xml.")
+        utils.log("Testing r2g.online.blast _parse_xml.")
         xml_dir = "{}/data".format(os.path.split(os.path.abspath(__file__))[0])
         xml_files = [
             "{}/no_result.xml".format(xml_dir),
@@ -120,7 +124,7 @@ class TestBlast(unittest.TestCase):
                     assertion = True
                 else:
                     assertion = False
-                    main.log("Error occured while parsing {}".foramt(xml_files[i]))
+                    utils.log("Error occured while parsing {}".format(xml_files[i]))
                     break
         self.assertTrue(assertion)
 
@@ -129,4 +133,4 @@ class TestBlast(unittest.TestCase):
 
 
 if __name__ == '__main__':
-    unittest.main()
+    unittest.main(warnings='ignore')

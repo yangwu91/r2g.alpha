@@ -2,17 +2,17 @@ import subprocess
 import os
 from shutil import copyfile, copytree
 
-from r2g import main
+from r2g import utils
 from r2g import errors
 
 
 class Trinity:
     def __init__(self, args, app_json, fastq_list, paired):
-        self.stamp = main.stamp()
+        self.stamp = utils.stamp()
         self.output = os.path.join(args["outdir"], "trinity_output_{}".
                                    format(self.stamp))
         self.cmd = [
-            os.path.join(app_json["Trinity"], "Trinity"),
+            app_json["Trinity"],
             "--seqType", "fq",
             "--max_memory", args["max_memory"],
             "--CPU", str(args['CPU']),
@@ -29,8 +29,8 @@ class Trinity:
             elif len(fastq_list.keys()) == 2:
                 files = ','.join(fastq_list['1'] + fastq_list['2'])
             self.cmd += ['--single', files]
-        # The main r2g script will take care of this:
-        #if args['full_cleanup']:
+        # The utils r2g script will take care of this:
+        # if args['full_cleanup']:
         #    self.cmd.append("--full_cleanup")
         if args['trim'] is not False:
             if args['trim'] is None or args['trim'] is True:
@@ -53,9 +53,9 @@ class Trinity:
         self.args = args
 
     def run(self):
-        main.log("Trinity cmd: {}".format(' '.join(self.cmd)))
-        main.log("Trinity is running. Output dir: {}".format(self.output))
-        main.log("Trinity log file: {}".format(self.log))
+        utils.log("Trinity cmd: {}".format(' '.join(self.cmd)))
+        utils.log("Trinity is running. Output dir: {}".format(self.output))
+        utils.log("Trinity log file: {}".format(self.log))
         try:
             with subprocess.Popen(self.cmd,
                                   shell=False,
@@ -63,31 +63,29 @@ class Trinity:
                                   stderr=subprocess.PIPE,
                                   # bufsize=1
                                   ) as p:
-                if not self.args['cleanup']:
+                if not self.args.get('cleanup', False):
                     with open(self.log, 'w') as outf:
                         for line in iter(p.stdout.readline, ''):
                             if len(line) == 0:
                                 break
-                            outf.write(main.bytes2str(line))
+                            outf.write(utils.bytes2str(line))
                             if self.args['verbose']:
                                 print(line)
                         # sys.stdout.write(line)
                 p.wait()
                 if p.returncode != 0:
                     raise errors.AssembleError(
-                        "Trinity failed. Please check log files {} for more "
-                        "information.".format(self.log)
+                        "Trinity failed. Please check log files {} for more information.".format(self.log)
                     )
                 else:
-                    main.log("Trinity done.")
+                    utils.log("Trinity done.")
                 return self.output
         except Exception as err:
             raise errors.AssembleError("Errors raised when called Trinity. {}. "
                                        "Please check the Trinity log above".format(err))
 
     def copyto(self, final_result):
-        if self.args['stage'] == 'chrysalis' or \
-                self.args['stage'] == 'butterfly':
+        if self.args['stage'] == 'chrysalis' or self.args['stage'] == 'butterfly':
             copyfile(os.path.join(self.output, "Trinity.fasta"), final_result)
         else:
             copytree(os.path.join(self.output), final_result)

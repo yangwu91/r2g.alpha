@@ -2,7 +2,7 @@ import unittest
 import tempfile
 import os
 import shutil
-from r2g import main
+from r2g import utils
 from r2g.local import assemblers
 
 
@@ -32,7 +32,7 @@ class TestAssemblers(unittest.TestCase):
 
     def test_trinity_paired(self):
         paired = True
-        app_json = main.preflight(self.args)
+        app_json = utils.preflight(self.args)
         trinity = assemblers.Trinity(self.args, app_json, self.fastq_list, paired)
         trinity_dir = trinity.run()
         result = "{}/Trinity.fasta".format(trinity_dir)
@@ -42,29 +42,32 @@ class TestAssemblers(unittest.TestCase):
                 self.assertion = True
         self.assertTrue(self.assertion)
 
-    def test_trinity_singled_1(self):
+    def test_trinity_singled_trimmed(self):
         paired = False
-        #self.args["verbose"] = True
-        self.args['full_cleanup'] = True
+        # self.args["verbose"] = True
+        # self.args['full_cleanup'] = True
         self.args['trim'] = True
-        app_json = main.preflight(self.args)
+        app_json = utils.preflight(self.args)
         trinity = assemblers.Trinity(self.args, app_json, self.fastq_list, paired)
         trinity_dir = trinity.run()
-        result = "{}/{}.Trinity.fasta".format(self.output_dir, os.path.split(trinity_dir)[1])
+        # result = "{}/{}.Trinity.fasta".format(self.output_dir, os.path.split(trinity_dir)[1])
+        result = "{}/{}/Trinity.fasta".format(self.output_dir, os.path.split(trinity_dir)[1])
         if os.path.isfile(result) and os.stat(result).st_size > 1000:
             self.assertion = True
         self.assertTrue(self.assertion)
 
-    def test_trinity_singled_2(self):
+    def test_trinity_customtrimmed(self):
         paired = False
-        #self.args["verbose"] = True
-        self.args['full_cleanup'] = True
+        # self.args["verbose"] = True
+        # self.args['full_cleanup'] = True
         self.args['trim'] = "SLIDINGWINDOW:4:5 LEADING:5 TRAILING:5 MINLEN:25"
         del self.fastq_list['2']
-        app_json = main.preflight(self.args)
+        app_json = utils.preflight(self.args)
         trinity = assemblers.Trinity(self.args, app_json, self.fastq_list, paired)
         trinity_dir = trinity.run()
-        result = "{}/{}.Trinity.fasta".format(self.output_dir, os.path.split(trinity_dir)[1])
+        result = "{}/{}/Trinity.fasta".format(self.output_dir, os.path.split(trinity_dir)[1])
+        print(result)
+        print(os.stat(result).st_size)
         if os.path.isfile(result) and os.stat(result).st_size > 1000:
             self.assertion = True
         self.assertTrue(self.assertion)
@@ -72,9 +75,9 @@ class TestAssemblers(unittest.TestCase):
     def test_trinity_stage(self):
         paired = True
         for stage in ['jellyfish', 'inchworm', 'chrysalis']:
-            stamp = main.stamp()
+            stamp = utils.stamp()
             self.args['stage'] = stage
-            app_json = main.preflight(self.args)
+            app_json = utils.preflight(self.args)
             trinity = assemblers.Trinity(self.args, app_json, self.fastq_list, paired)
             trinity_dir = trinity.run()
             if stage == "jellyfish":

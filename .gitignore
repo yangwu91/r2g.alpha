@@ -7,6 +7,9 @@ coverage_report.txt
 coverage.cmd.sh
 pypi.upload.sh
 filelist.alpha.txt
+NCBI_scraping
+*.ipynb
+.ipynb_checkpoints
 
 
 # Created by .ignore support plugin (hsz.mobi)

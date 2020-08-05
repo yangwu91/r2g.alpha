@@ -1,18 +1,18 @@
 import unittest
-from r2g import main
+from r2g import utils
 from r2g.online import fetch
 from r2g import errors
 
 
 class TestFetch(unittest.TestCase):
     def test_fastq_dump(self):
-        main.log("Testing r2g.online.fetch fastq_dump.")
+        utils.log("Testing r2g.online.fetch fastq_dump.")
         args = {
             'query': "ATGC",
             'verbose': False,
             'stage': 'butterfly'
         }
-        app_json = main.preflight(args)
+        app_json = utils.preflight(args)
         fastq = {
             '1':
                 '@FCC2U5KACXX:6:1101:9243:74192/1\n'
@@ -26,23 +26,23 @@ class TestFetch(unittest.TestCase):
                 'CCCFFFFFHHHHHJJJJJJJIJJIJJIJJJJJIIJJJJIGIIJJJJJHIHHHFFFFDECEEEEDEDDDDDDDEEFEDDDCDDDDDCCDDD\n'
         }
         log = "SRR1812889 232339-232339:\nb'Read 1 spots for SRR1812889\\nWritten 1 spots for SRR1812889\\n'----"
-        main.log("Testing fastq-dump.")
+        utils.log("Testing fastq-dump.")
         fetched_fastq, fetched_log = fetch.fastq_dump('SRR1812889', 232339, 232339, app_json)
         self.assertEqual((fastq, log), (fetched_fastq, fetched_log))
 
     def test_fastq_dump_error(self):
-        main.log("Raising r2g.online.fetch fastq_dump error.")
+        utils.log("Raising r2g.online.fetch fastq_dump error.")
         args = {
             'query': "ATGC",
             'verbose': False,
             'stage': 'butterfly'
         }
-        app_json = main.preflight(args)
+        app_json = utils.preflight(args)
         with self.assertRaises(errors.FetchError):
             _, _ = fetch.fastq_dump('SRR1812889', "X", "J", app_json)
 
     def test_parse_fastq_error(self):
-        main.log("Raising r2g.online.fetch _parse_fastq error.")
+        utils.log("Raising r2g.online.fetch _parse_fastq error.")
         check = []
         fake_fastqs = [
             "@a\nATGC\n+\nAAAA\n",

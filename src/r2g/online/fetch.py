@@ -1,13 +1,13 @@
 import subprocess
-import os
-from r2g import main
+
+from r2g import utils
 from r2g import errors
 
 
 def fastq_dump(sra, spotN, spotX, app_json):
     """Works with fastq-dump 2.8.2 and 2.9.2"""
     cmd = [
-        os.path.join(app_json['fastq-dump'], "fastq-dump"),
+        app_json['fastq-dump'],
         # "--defline-seq", "@$sn[_$rn]/$ri",
         "--defline-seq", "@$sn/$ri",
         "--split-files",
@@ -23,9 +23,9 @@ def fastq_dump(sra, spotN, spotX, app_json):
                               stderr=subprocess.PIPE) as p:
             stdout, stderr = p.communicate()
             if p.returncode != 0:
-                raise errors.FetchError(main.bytes2str(stderr))
+                raise errors.FetchError(utils.bytes2str(stderr))
             else:
-                sequence = _parse_fastq(main.bytes2str(stdout))
+                sequence = _parse_fastq(utils.bytes2str(stdout))
                 log = '{} {}-{}:\n{}----'.format(sra, spotN, spotX, stderr)
                 return sequence, log
     except OSError as err:
@@ -44,14 +44,12 @@ def _parse_fastq(sequence):
             pair = read[0][-2:]
             assert pair in ['/1', '/2']
         except (AssertionError, IndexError):
-            raise errors.FetchError("Downloaded sequences are not in FASTQ "
-                                    "format: \n{}".format('\n'.join(read)))
+            raise errors.FetchError("Downloaded sequences are not in FASTQ format: \n{}".format('\n'.join(read)))
         else:
-            split_sequence[pair[-1]] = split_sequence.get(pair[-1], '') + \
-                                       '\n'.join(read) + '\n'
-#    num_keys = len(split_sequence.keys())
-#    if num_keys == 1:
-#        split_sequence['paired'] = False
-#    else:
-#        split_sequence['paired'] = False
+            split_sequence[pair[-1]] = split_sequence.get(pair[-1], '') + '\n'.join(read) + '\n'
+    # num_keys = len(split_sequence.keys())
+    # if num_keys == 1:
+    #     split_sequence['paired'] = False
+    # else:
+    #     split_sequence['paired'] = False
     return split_sequence

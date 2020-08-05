@@ -1,7 +1,9 @@
 #!/usr/bin/env python
 
+import os
 import unittest
-from r2g import main
+
+from r2g import utils
 from r2g.online import blast
 
 aae_rps7 =""">AAEL009496-RA_RPS7
@@ -21,38 +23,44 @@ TTCCCGGAGCCCTACCTATAAACTATTACAACCAATAGTTGCTAGAAATTAATCTAATAA
 GTGAGCGCGCGCGGAAGGTTGGTAAAACTGAAGAAAAAAAACTATGTACGGAACTAGGGT
 GTGCATAAATCATCTTTGTGCTGCATCGTTCGCCCCCTTTAAATAAAGACCCTCACCAAA
 CGGAGGGACAAGAACAGTTTACAGGTGTATTGGAAAACAATTTCTAA"""
+
 args_dict = {
-    'verbose': False,
-    'outdir': 'RPS7',
-    'sra': 'SRX5138669',
-    'query': None,
-    'program': 'blastn',
-    'max_num_seq': 1000,
-    'evalue': 0.001,
-    'cut': '50,20',
-    'retry': 5,
-    'CPU': 8,
-    'max_memory': '4G',
-    'min_contig_length': 150,
-    #'KMER_SIZE': 25,
+    'CPU': 4,
+    'browser': None,
+    'chrome_proxy': None,
     'cleanup': False,
+    'cut': '50,20',
+    'docker': False,
+    'evalue': 0.001,
+    'firefox_proxy': None,
+    'max_memory': '4G',
+    'max_num_seq': 1000,
+    'min_contig_length': 150,
+    'outdir': 'RPS7',
+    'program': 'blastn',
+    'proxy': None,
+    'query': None,
+    'retry': 5,
+    'sra': 'SRX5138669',
+    'stage': 'butterfly',
     'trim': False,
-    'stage': 'butterfly'
+    'verbose': False
 }
 
 
 class TestR2g(unittest.TestCase):
 
-    def test_main_parse_argument(self):
-        online_raw_args = "-o RPS7 -s SRX5138669 -q aae_RPS7.fa --cut 50,20 -r 5 --CPU 8".split()
+    def test_utils_parse_argument(self):
+        online_raw_args = "-o RPS7 -s SRX5138669 -q aae_RPS7.fa --cut 50,20 -r 5 --CPU 4".split()
         globals()['args_dict']['query'] = "aae_RPS7.fa"
-        self.assertEqual(main.parse_arguments(online_raw_args, "0.1.0"), globals()['args_dict'])
+        self.assertEqual(utils.parse_arguments(online_raw_args), globals()['args_dict'])
 
     def test_blast_query(self):
         globals()['args_dict']['query'] = globals()['aae_rps7']
-        result = blast.query(globals()['args_dict'])
-        self.assertTrue((result[0] == "Undefined") and ((18860436, 18860436) in result[1]["SRR8326954"]))
+        result = blast.query(globals()['args_dict'], os.environ["PRIVATE_WEBDRIVER"])
+        print(result)
+        self.assertTrue((result[0] == "AAEL009496-RA_RPS7") and ((148515, 148515) in result[1]["SRR8326954"]))
 
 
 if __name__ == "__main__":
-    unittest.main(verbosity=2)
+    unittest.main(verbosity=2, warnings='ignore')

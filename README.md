@@ -1,22 +1,26 @@
+
+# Reads to Genes (r2g)
+
 ![PyPI](https://img.shields.io/pypi/v/r2g.alpha?logo=pypi&style=plastic) ![pyver](https://img.shields.io/pypi/pyversions/r2g.alpha?logo=python&style=plastic) ![travis](https://img.shields.io/travis/yangwu91/r2g.alpha?logo=travis&style=plastic) ![Codecov](https://img.shields.io/codecov/c/gh/yangwu91/r2g.alpha?logo=codecov&style=plastic) ![docker](https://img.shields.io/docker/cloud/build/yangwu91/r2g.alpha?logo=docker&style=plastic)
 
 <div align=center><img src="https://raw.githubusercontent.com/yangwu91/r2g.alpha/master/docs/icon.png" alt="icon"/></div>
 
-# Reads to Genes (r2g)
+### 
 
 **Reads to genes**, or **r2g**, is a Python-based light-weight pipeline to find and assemble target homologous genes in species with poor genome assemblies or even without genome assemblies. Very common personal computers without high-end specs nor tons of sequencing data stored can run it adequately. 
 
 ## Implementation
 
-### PyPI
+### Manually installation
+#### Required third-party applications
+Three third-party software packages including [NCBI SRA Toolkit](https://github.com/ncbi/sra-tools), [Trinity](https://github.com/trinityrnaseq/trinityrnaseq), and [selenium/standalone-chrome docker](https://github.com/SeleniumHQ/docker-selenium/tree/trunk/StandaloneChrome) (or [chromedriver](https://chromedriver.chromium.org/downloads) with [Chrome web browser](https://www.google.com/chrome/)) are required while running. *N.B.* the Trinity software package doesn’t have pre-compiled binary files for Windows users.
 
+#### Pypi
 The r2g pipeline was written in Python, and it can be installed by one command as follows:
 
 ```
 pip install r2g
 ```
-
-Besides, two third-party software packages including [NCBI SRA Toolkit](https://github.com/ncbi/sra-tools) and [Trinity](https://github.com/trinityrnaseq/trinityrnaseq) are required while running. *N.B.* the Trinity software package doesn’t have pre-compiled binary files for Windows users.
 
 ### Docker (recommended)
 

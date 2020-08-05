@@ -2,11 +2,11 @@ from setuptools import setup
 import re
 import os
 
-with open('README.md', 'r') as inf:
+with open('{}/README.md'.format(os.path.split(os.path.abspath(__file__))[0]), 'r') as inf:
     long_description = inf.read()
 
-with open('{}/src/scripts/r2g'.format(os.path.split(os.path.abspath(__file__))[0]), 'r') as inf:
-    version = re.findall(r'version = "(.+)"', inf.read())[0]
+with open('{}/src/r2g/__init__.py'.format(os.path.split(os.path.abspath(__file__))[0]), 'r') as inf:
+    version = re.findall(r'__version__ = "(.+)"', inf.read())[0]
 
 setup(
     name='r2g',
@@ -21,17 +21,18 @@ setup(
                 'NCBI SRA database.',
     long_description=long_description,
     long_description_content_type="text/markdown",
+    python_requires='>=3.6',
+    install_requires=["requests~=2.24.0", "selenium~=3.141.0"],
     scripts=['src/scripts/r2g'],
-    py_modules=["r2g.errors", "r2g.warnings"],
+    py_modules=['r2g.errors', ],
     packages=[
-        "r2g.main",
-        "r2g.Bio",
+        "r2g",
+        "r2g.utils",
         "r2g.local",
         "r2g.online"
     ],
     package_dir={"": "src"},
-    package_data={"": ["*LICENSE*", "*path.json*"]},
-    include_package_data=True,
+    package_data={'r2g': ['*.json', ]},
     classifiers=[
         "Development Status :: 5 - Production/Stable",
         "Environment :: Console",
@@ -39,13 +40,12 @@ setup(
         # Technically the license is not OSI approved,
         # but almost there, so might put:
         "License :: OSI Approved :: MIT License",
-        # "License :: Freely Distributable",
         "Natural Language :: English",
         "Operating System :: OS Independent",
-        "Programming Language :: Python :: 3",
-        "Programming Language :: Python :: 3.8",
         "Programming Language :: Python :: 3.6",
         "Programming Language :: Python :: 3.7",
+        "Programming Language :: Python :: 3.8",
+        "Programming Language :: Python :: 3.9",
         "Topic :: Scientific/Engineering :: Bio-Informatics"
     ],
     test_suite="nose.collector",

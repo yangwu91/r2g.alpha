@@ -10,6 +10,7 @@ filelist.alpha.txt
 NCBI_scraping
 *.ipynb
 .ipynb_checkpoints
+.pytest_cache
 
 
 # Created by .ignore support plugin (hsz.mobi)

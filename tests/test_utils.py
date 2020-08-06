@@ -3,7 +3,6 @@ from unittest import mock
 
 import os
 import tempfile
-import shutil
 import json
 from stat import S_IWUSR, S_IREAD, S_IRGRP, S_IROTH
 from copy import deepcopy
@@ -13,7 +12,7 @@ from r2g import utils
 from r2g import errors
 
 
-class TestMain(unittest.TestCase):
+class TestUtils(unittest.TestCase):
     def setUp(self):
         self.args = {
             'CPU': 4,
@@ -43,6 +42,8 @@ class TestMain(unittest.TestCase):
         ]
         self.path = deepcopy(os.environ['PATH'])
         self.app_json = utils.preflight(self.args)
+        #self.app_json["chromedriver"] = os.environ.get("PRIVATE_WEBDRIVER", "http://127.0.0.1:4444/wd/hub")
+        utils.log("app_json is {}".format(self.app_json))
         self.pwd = os.getcwd()
 
     def test_parse_args(self):
@@ -61,7 +62,7 @@ class TestMain(unittest.TestCase):
         self.args['query'] = query_file
         with self.assertRaises(errors.InputError):
             _ = utils.preflight(self.args)
-        utils.remove_anything(query_file)
+        utils.delete_everything(query_file)
 
     def test_check_apps(self):
         utils.log("Testing r2g.utils.utils configure files.")
@@ -107,12 +108,11 @@ class TestMain(unittest.TestCase):
         # Restore everything:
         os.environ['PATH'] = deepcopy(self.path)
         os.chmod(self.config_files[0], S_IWUSR | S_IREAD)
-        try:
-            os.remove(self.config_files[1])
-        except (FileNotFoundError, PermissionError, IsADirectoryError):
-            pass
+        utils.delete_everything(self.config_files[1])
         with open(self.config_files[0], 'w') as outf:
             outf.write("")
+        utils.log("assertion 1 is {}".format(assertion1))
+        utils.log("assertion 2 is {}".format(assertion2))
         self.assertTrue(assertion1 & assertion2)
 
 

@@ -98,6 +98,6 @@ if __name__ == "__main__":
         # Clean up:
         if args['cleanup']:
             utils.log("A little bit of housekeeping work...")
-            utils.remove_anything(cleanup_items)
+            utils.delete_everything(cleanup_items)
 
     utils.log("All set. Bye.")

@@ -1,9 +1,9 @@
-__banner__ = """\
+__banner__ = r"""
                ___     
           ____|_  ___ _
          / __/ __/ _ `/
         /_/ /____\_, / 
- Reads to genes /___/  \
+ Reads to genes /___/  
 """
 
 __title__ = "r2g"

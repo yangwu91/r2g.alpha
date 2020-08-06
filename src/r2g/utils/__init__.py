@@ -38,12 +38,14 @@ def bytes2str(b):
     return str(b.decode("utf-8"))
 
 
-def remove_anything(items):
+def delete_everything(items):
+    if type(items) not in (list, tuple):
+        items = [items, ]
     for item in items:
         try:
             shutil.rmtree(item)
-        # except Exception:
-        except shutil.NotADirectoryError:
+        # except shutil.NotADirectoryError:
+        except Exception:
             os.remove(item)
 
 
@@ -97,8 +99,8 @@ def parse_arguments(raw_args):
                         default=os.getcwd()
                         )
     parser.add_argument("-W", "--browser",
-                        help="Temporarily overwrite the local path or the remote address of the firefox webdriver. "
-                             "E.g., /path/to/geckodriver or http://127.0.0.1:4444/wd/hub",
+                        help="Temporarily overwrite the local path or the remote address of the chrome webdriver. "
+                             "E.g., /path/to/chromedriver or http://127.0.0.1:4444/wd/hub",
                         default=None,
                         metavar="DIR"
                         )
@@ -311,6 +313,24 @@ def preflight(args):
                 path_app = False
         else:
             path_app = False
+        if path_app is False and app == "chromedriver":
+            try:
+                # Supposed to be a remote webdriver:
+                ip = re.search(r'(\d{1,3}\.\d{1,3}.\d{1,3}\.\d{1,3})', path).group(1)
+            except AttributeError:
+                # It is NOT a remote webdriver either:
+                pass
+            else:
+                # It is a remote webdriver, so try to format it:
+                try:
+                    port = re.search(r'\d{1,3}\.\d{1,3}.\d{1,3}\.\d{1,3}:(\d+)', path).group(1)
+                except AttributeError:
+                    port = "4444"
+                try:
+                    scheme = re.search(r'(https?)://\d{1,3}\.\d{1,3}.\d{1,3}\.\d{1,3}', path).group(1)
+                except AttributeError:
+                    scheme = "http"
+                path_app = "{}://{}:{}/wd/hub".format(scheme, ip, port)
         return path_app
 
     def _check_config(config_file):
@@ -322,7 +342,7 @@ def preflight(args):
                 re_config = True
             else:
                 for item in config_dict.items():
-                    path_app = _check_app(item[1], item[0])
+                    path_app = _check_app(item[1], item[0])  # path, app
                     if path_app is False:
                         re_config = True
                         break
@@ -337,6 +357,24 @@ def preflight(args):
             else:
                 writable = False
         return re_config, writable
+
+    def _reformat_config_file(config_file):
+        app_json = file2json(config_file)
+        formatted_app_json = {}
+        for item in app_json.items():
+            path_app = _check_app(item[1], item[0])
+            formatted_app_json[item[0]] = path_app
+        try:
+            with open(config_file, 'w') as outf:
+                json.dump(
+                    formatted_app_json,
+                    outf,
+                    indent=4,
+                    separators=(',', ': ')
+                )
+        except Exception:
+            pass
+        return formatted_app_json
 
     def _check_sequences(seq):
         alphabets = [
@@ -381,9 +419,7 @@ def preflight(args):
         find = 'where'  # Windows
     else:
         find = 'which'  # including Linux and Darwin
-    app_json = {}.fromkeys(['fastq-dump', 'chromedriver'])
-    if args['stage'] != 'no_trinity':
-        app_json['Trinity'] = None
+    app_json = {}.fromkeys(['fastq-dump', 'chromedriver', "Trinity"])
     checked = []
     config_files = [
         os.path.abspath(os.path.join(r2g.__path__[0], "path.json")),
@@ -394,10 +430,10 @@ def preflight(args):
         checked.append(_check_config(cfg))
         log("Check config files: {} - {}".format(cfg, _check_config(cfg)), args['verbose'], 'debug')
     if checked[0][0] is False:
-        app_json = file2json(config_files[0])
+        app_json = _reformat_config_file(config_files[0])
         log("Applying the config file: {}".format(config_files[0]))
     elif checked[0][0] is True and checked[1][0] is False:
-        app_json = file2json(config_files[1])
+        app_json = _reformat_config_file(config_files[1])
         log("Applying the config file: {}".format(config_files[1]))
     else:
         need_save = False
@@ -407,10 +443,14 @@ def preflight(args):
             "chromedriver": _input_webdriver_dir,
         }
         for app in app_json.keys():
-            # Temporarily overwrite the path to the webdriver:
-            if app == "chromedriver" and args.get("browser", None) is not None and args.get("docker", False) is False:
-                app_json['chromedriver'] = args['browser']
-                continue
+            if app == "chromedriver":
+                # Temporarily overwrite the path to the webdriver:
+                if args.get("browser", None) is not None and args.get("docker", False) is False:
+                    app_json['chromedriver'] = args['browser']
+                    continue
+                elif os.environ.get("PRIVATE_WEBDRIVER", None) is not None:
+                    app_json["chromedriver"] = os.environ["PRIVATE_WEBDRIVER"]
+                    continue
             configured = False
             try:
                 path = os.path.split(bytes2str(subprocess.check_output([find, app])).strip())[0]
@@ -423,30 +463,35 @@ def preflight(args):
                 if choice:
                     path = input_dir[app]()
                     # remote webdriver:
-                    if app == "chromedriver":
-                        try:
-                            # Supposed to be a remote webdriver:
-                            address = re.search(r'(\d{1,3}\.\d{1,3}.\d{1,3}\.\d{1,3})', path).group(1)
-                        except AttributeError:
-                            # It is NOT a remote webdriver:
-                            pass
-                        else:
-                            # It is a remote webdriver, so try to format it:
-                            try:
-                                port = re.search(r'\d{1,3}\.\d{1,3}.\d{1,3}\.\d{1,3}:(\d+)', path).group(1)
-                            except AttributeError:
-                                port = "4444"
-                            try:
-                                scheme = re.search(r'(https?)://\d{1,3}\.\d{1,3}.\d{1,3}\.\d{1,3}', path).group(1)
-                            except AttributeError:
-                                scheme = "http"
-                            path = "{}://{}:{}/wd/hub".format(scheme, address, port)
-                            app_json[app] = path
-                            configured = True
+                    # if app == "chromedriver":
+                    #     try:
+                    #         # Supposed to be a remote webdriver:
+                    #         address = re.search(r'(\d{1,3}\.\d{1,3}.\d{1,3}\.\d{1,3})', path).group(1)
+                    #     except AttributeError:
+                    #         # It is NOT a remote webdriver:
+                    #         pass
+                    #     else:
+                    #         # It is a remote webdriver, so try to format it:
+                    #         try:
+                    #             port = re.search(r'\d{1,3}\.\d{1,3}.\d{1,3}\.\d{1,3}:(\d+)', path).group(1)
+                    #         except AttributeError:
+                    #             port = "4444"
+                    #         try:
+                    #             scheme = re.search(r'(https?)://\d{1,3}\.\d{1,3}.\d{1,3}\.\d{1,3}', path).group(1)
+                    #         except AttributeError:
+                    #             scheme = "http"
+                    #         path = "{}://{}:{}/wd/hub".format(scheme, address, port)
+                    #         app_json[app] = path
+                    #         configured = True
                     while not configured:
                         path_app = _check_app(path, app)
                         if path_app is False:
-                            log('"{}": No such file or not executable, please try again.'.format(path_app))
+                            if app == "chromedriver":
+                                log('"{}" is not the valid format of webdriver. '
+                                    'It is supposed to be scheme://ip:port or a local path. '
+                                    'Please try again.'.format(path))
+                            else:
+                                log('"{}": No such file or not executable, please try again.'.format(path))
                             path = input_dir[app]()
                         else:
                             app_json[app] = path_app
@@ -464,18 +509,17 @@ def preflight(args):
                 log("Don't have permission to save the config. You may have to re-config it next time.")
             if config_file is not None:
                 choice = _ask_yes_or_no(
-                    "Do you want to keep the config file? ([Y]/N) ".format(
-                        config_file
-                    )
+                    "Do you want to keep the config file? ([Y]/N) ".format(config_file)
                 )
                 if choice:
                     with open(config_file, 'w') as outf:
                         log("The config file was saved as {}".format(config_file))
-                        json.dump(app_json,
-                                  outf,
-                                  indent=4,
-                                  separators=(',', ': ')
-                                  )
+                        json.dump(
+                            app_json,
+                            outf,
+                            indent=4,
+                            separators=(',', ': ')
+                        )
                 else:
                     log("The config file is not saved. You may have to re-config it next time.")
     return app_json

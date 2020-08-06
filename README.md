@@ -1,7 +1,7 @@
 
 # Reads to Genes (r2g)
 
-![PyPI](https://img.shields.io/pypi/v/r2g.alpha?logo=pypi&style=plastic) ![pyver](https://img.shields.io/pypi/pyversions/r2g.alpha?logo=python&style=plastic) ![travis](https://img.shields.io/travis/yangwu91/r2g.alpha?logo=travis&style=plastic) ![Codecov](https://img.shields.io/codecov/c/gh/yangwu91/r2g.alpha?logo=codecov&style=plastic) ![docker](https://img.shields.io/docker/cloud/build/yangwu91/r2g.alpha?logo=docker&style=plastic)
+![PyPI](https://img.shields.io/pypi/v/r2g.alpha?logo=pypi&style=plastic) ![pyver](https://img.shields.io/pypi/pyversions/r2g.alpha?logo=python&style=plastic) ![travis](https://img.shields.io/travis/yangwu91/r2g.alpha?logo=travis&style=plastic) ![Codecov](https://img.shields.io/codecov/c/gh/yangwu91/r2g.alpha?logo=codecov&style=plastic) ![docker](https://img.shields.io/docker/cloud/build/yangwu91/r2g.alpha?logo=docker&style=plastic) ![licence](https://img.shields.io/github/license/yangwu91/r2g.alpha?logo=open-source-initiative&style=plastic)
 
 <div align=center><img src="https://raw.githubusercontent.com/yangwu91/r2g.alpha/master/docs/icon.png" alt="icon"/></div>
 

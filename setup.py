@@ -22,7 +22,6 @@ setup(
     long_description=long_description,
     long_description_content_type="text/markdown",
     python_requires='>=3.6',
-    install_requires=["requests~=2.24.0", "selenium~=3.141.0"],
     scripts=['src/scripts/r2g'],
     py_modules=['r2g.errors', ],
     packages=[
@@ -45,9 +44,10 @@ setup(
         "Programming Language :: Python :: 3.6",
         "Programming Language :: Python :: 3.7",
         "Programming Language :: Python :: 3.8",
-        "Programming Language :: Python :: 3.9",
         "Topic :: Scientific/Engineering :: Bio-Informatics"
     ],
-    test_suite="nose.collector",
-    tests_require=['nose']
+    install_requires=["requests~=2.24.0", "selenium~=3.141.0"],
+    extras_require={
+        'test': ["pytest", "pytest-cov", "codecov"],
+    },
 )

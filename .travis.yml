@@ -12,23 +12,24 @@ jobs:
     env: URL=https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh
     python: "3.6"
   - os: osx
-    osx_image: xcode10.3
+    osx_image: xcode12
     env: URL=https://repo.continuum.io/miniconda/Miniconda3-latest-MacOSX-x86_64.sh
     language: generic
+env:
+  - TRINITY=2.8.5  # The latest version 2.11.0 can't be manually compiled on macOS somehow.
+  - SRATOOLS=2.10.8
 
 before_install:
   - if [ "$TRAVIS_OS_NAME" = "linux" ]; then sudo apt-get install libxml-libxml-perl; fi
   - bash ./.travis_before_install.sh $URL
-  - if [ "$TRAVIS_OS_NAME" = "linux" ]; then export PATH=$PATH:$PWD/miniconda3/bin; fi
-  - if [ "$TRAVIS_OS_NAME" = "osx" ]; then export PATH=$PWD/miniconda3/bin:$PWD/trinityrnaseq-Trinity-v2.8.5:$PATH; export TRINITY_HOME=$PWD/trinityrnaseq-Trinity-v2.8.5; fi
+  - if [ "$TRAVIS_OS_NAME" = "linux" ]; then export "PATH=$PATH:$PWD/miniconda3/bin"; fi
+  - if [ "$TRAVIS_OS_NAME" = "osx" ]; then export "PATH=$PWD/miniconda3/bin:$PWD/trinityrnaseq-v${TRINITY}:$PATH"; export "TRINITY_HOME=$PWD/trinityrnaseq-v${TRINITY}"; fi
 
-install: 
-  - pip install .
+install:
+  - pip install .[test]
 
 script:
-  - coverage run setup.py test
+  - travis_wait 20 pytest --cov=r2g
  
 after_success:
-  - coverage xml
-  - codecov --file coverage.xml -X pycov -X gcov
-  - coveralls
+  - codecov

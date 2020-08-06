@@ -5,8 +5,8 @@ exprot TRINITY=2.8.5  # The latest version 2.11.0 can't be manually compiled on 
 export SRA=2.10.8
 
 wget -qO /tmp/miniconda.sh $1
-bash /tmp/miniconda.sh -bfp /opt/miniconda3
-export PATH=$PATH:/opt/miniconda3/bin
+bash /tmp/miniconda.sh -bfp $PWD/miniconda3
+export PATH=$PATH:$PWD/miniconda3/bin
 
 conda config --add channels bioconda
 conda config --add channels conda-forge

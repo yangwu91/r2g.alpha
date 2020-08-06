@@ -15,9 +15,6 @@ jobs:
     osx_image: xcode12
     env: URL=https://repo.continuum.io/miniconda/Miniconda3-latest-MacOSX-x86_64.sh
     language: generic
-env:
-  - TRINITY=2.8.5  # The latest version 2.11.0 can't be manually compiled on macOS somehow.
-  - SRATOOLS=2.10.8
 
 before_install:
   - if [ "$TRAVIS_OS_NAME" = "linux" ]; then sudo apt-get install libxml-libxml-perl; fi

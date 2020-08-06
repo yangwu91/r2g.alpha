@@ -12,8 +12,9 @@ conda config --add channels bioconda
 conda config --add channels conda-forge
 
 if [ "$TRAVIS_OS_NAME" = "osx" ]; then
-	wget -qO /tmp/trinity.tar.gz https://github.com/trinityrnaseq/trinityrnaseq/releases/download/${TRINITY}/trinityrnaseq-${TRINITY}.FULL.tar.gz
-	tar -zxvf /tmp/trinity.tar.gz && cd trinityrnaseq-v${TRINITY}
+	#wget -qO /tmp/trinity.tar.gz https://github.com/trinityrnaseq/trinityrnaseq/releases/download/${TRINITY}/trinityrnaseq-${TRINITY}.FULL.tar.gz
+	wget -qO /tmp/trinity.tar.gz https://github.com/trinityrnaseq/trinityrnaseq/archive/Trinity-v${TRINITY}.tar.gz
+	tar -zxvf /tmp/trinity.tar.gz && cd trinityrnaseq-Trinity-v${TRINITY}
 	export PATH=/usr/local/bin:$PATH
 	make CXX=g++ CC=gcc && make plugins CXX=g++ CC=gcc && cd ..
 	# The version of sra-tools in macOS channel is not the latest, so don't specify it here.

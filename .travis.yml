@@ -2,39 +2,41 @@ language: python
 
 jobs:
   include:
-  - os: linux
-    dist: bionic
-    env: URL=https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh
-    python: "3.8"
-  - os: linux
-    dist: bionic
-    env: URL=https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh
-    python: "3.7"
-  - os: linux
-    dist: xenial
-    env: URL=https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh
-    python: "3.6"
-  - os: osx
-    osx_image: xcode11.6
-    env: URL=https://repo.continuum.io/miniconda/Miniconda3-latest-MacOSX-x86_64.sh
-    language: generic
+    - os: osx
+      osx_image: xcode11.6
+      env: URL=https://repo.continuum.io/miniconda/Miniconda3-latest-MacOSX-x86_64.sh
+      language: generic
+    - os: linux
+      dist: bionic
+      env: URL=https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh
+      python: "3.8"
+    - os: linux
+      dist: xenial
+      env: URL=https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh
+      python: "3.7"
+    - os: linux
+      dist: trusty
+      env: URL=https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh
+      python: "3.6"
 
 before_install:
-  - |-
-      if [ "$TRAVIS_OS_NAME" = "linux" ]; then
-        sudo apt-get install libxml-libxml-perl
-      fi
   - bash ./.travis_before_install.sh $URL
   - |-
       case $TRAVIS_OS_NAME in
         linux)
-          export "PATH=$PATH:$PWD/miniconda3/bin"
+          export PATH="$PATH:$PWD/miniconda3/bin"
         ;;
         osx)
-          export "PATH=$PWD/miniconda3/bin:$PWD/trinityrnaseq-v${TRINITY}:$PATH"
-          export "TRINITY_HOME=$PWD/trinityrnaseq-v${TRINITY}"
+          export PATH="$PWD/miniconda3/bin:$PWD/trinityrnaseq-v${TRINITY}:$PATH"
+          export TRINITY_HOME="$PWD/trinityrnaseq-v${TRINITY}"
         ;;
       esac
+  - echo $(which samtools)
+  - echo $(samtools version)
+  - echo $(which Trinity)
+  - echo $(Trinity --version)
+  - echo $(which fastq-dump)
+  - echo $(fastq-dump --version)
 
 install:
   - pip install .[test]

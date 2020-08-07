@@ -20,6 +20,9 @@ jobs:
       python: "3.6"
 
 before_install:
+  - export PYTHON=3.8.5
+  - export TRINITY=2.8.5  # The latest version 2.11.0 can't be manually compiled on macOS somehow.
+  - export SRA=2.10.8
   - bash ./.travis_before_install.sh $URL
   - |-
       case $TRAVIS_OS_NAME in
@@ -27,12 +30,12 @@ before_install:
           export PATH="$PATH:$PWD/miniconda3/bin"
         ;;
         osx)
-          export PATH="$PWD/miniconda3/bin:$PWD/trinityrnaseq-v${TRINITY}:$PATH"
-          export TRINITY_HOME="$PWD/trinityrnaseq-v${TRINITY}"
+          export PATH="$PWD/miniconda3/bin:$PWD/trinityrnaseq-Trinity-v${TRINITY}:$PATH"
+          export TRINITY_HOME="$PWD/trinityrnaseq-Trinity-v${TRINITY}"
         ;;
       esac
   - echo $(which samtools)
-  - echo $(samtools version)
+  - echo $(samtools --version)
   - echo $(which Trinity)
   - echo $(Trinity --version)
   - echo $(which fastq-dump)

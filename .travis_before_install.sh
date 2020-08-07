@@ -3,10 +3,6 @@
 set -e
 set -u
 
-PYTHON=3.8.5
-TRINITY=2.8.5  # The latest version 2.11.0 can't be manually compiled on macOS somehow.
-SRA=2.10.8
-
 wget -qO /tmp/miniconda.sh $1
 bash /tmp/miniconda.sh -bfp $PWD/miniconda3
 export PATH=$PATH:$PWD/miniconda3/bin
@@ -16,6 +12,7 @@ conda config --add channels conda-forge
 
 case $TRAVIS_OS_NAME in
     linux)
+        sudo apt-get -yyq update
         sudo apt-get -yyq install libxml-libxml-perl
         conda install -qy sra-tools=$SRA trinity=$TRINITY numpy
     ;;

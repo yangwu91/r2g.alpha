@@ -13,7 +13,7 @@ conda config --add channels conda-forge
 case $TRAVIS_OS_NAME in
     linux)
         sudo apt-get -yyq update
-        sudo apt-get -yyq install libxml-libxml-perl
+        sudo apt-get -yyq install libxml-libxml-perl uuid-runtime
         conda install -qy sra-tools="$SRA" trinity="$TRINITY" numpy
     ;;
     osx)
@@ -29,5 +29,20 @@ case $TRAVIS_OS_NAME in
 	      conda install -qy python="$PYTHON" sra-tools samtools=1.10 numpy bowtie bowtie2 kmer-jellyfish salmon trimmomatic
     ;;
 esac
+mkdir -p "${HOME}"/.ncbi
+cat > "${HOME}"/.ncbi/user-settings.mkfg <<_EOF
+## auto-generated configuration file - DO NOT EDIT ##
+
+/LIBS/GUID = "$(uuidgen)"
+/config/default = "false"
+/repository/user/ad/public/apps/file/volumes/flatAd = "."
+/repository/user/ad/public/apps/refseq/volumes/refseqAd = "."
+/repository/user/ad/public/apps/sra/volumes/sraAd = "."
+/repository/user/ad/public/apps/sraPileup/volumes/ad = "."
+/repository/user/ad/public/apps/sraRealign/volumes/ad = "."
+/repository/user/ad/public/root = "."
+/repository/user/default-path = "${HOME}/ncbi"
+
+_EOF
 
 conda clean -ayq

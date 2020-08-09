@@ -58,6 +58,14 @@ For **Linux** and **macOS** users, it also can be installed using [Conda](https:
 conda install -c bioconda sra-tools
 ```
 
+If the installed version of SRA Toolkit is above 2.10.3, before the first run you have to execute the follow command:
+
+```
+vdb-config --interactive
+```
+
+Then press `X` to set up the default configs. This is a known annoying [issue](https://github.com/ncbi/sra-tools/issues/291) that can't be avoided.
+
 ##### 2. Trinity
 
 Follow the [instruction](https://github.com/trinityrnaseq/trinityrnaseq/wiki/Installing-Trinity) to compile the source code. Please note that Trinity has its own dependencies, including [samtools](https://github.com/samtools/samtools), [Python 3](https://www.python.org/) with [NumPy](https://numpy.org/install/), [bowtie2](http://bowtie-bio.sourceforge.net/bowtie2/index.shtml), [jellytfish](http://www.genome.umd.edu/jellyfish.html), [salmon](https://salmon.readthedocs.io/en/latest/salmon.html), and [trimmomatic](http://www.usadellab.org/cms/?page=trimmomatic).
@@ -68,7 +76,7 @@ For **Linux** users, Trinity can be installed easily using Conda, and you would 
 conda install -c bioconda trinity=2.8.5 numpy samtools=1.10
 ```
 
-The Trinity **Version 2.8.5** has been fully tested, and theoretically, the later versions should work too.
+The compatibility of Trinity **Version 2.8.5** with r2g has been fully tested, and theoretically, the later versions should work too.
 
 ##### 3. Google Chrome web browser with ChromeDriver
 

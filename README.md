@@ -2,13 +2,12 @@
 
 ![PyPI](https://img.shields.io/pypi/v/r2g?logo=pypi&style=plastic) ![py_ver](https://img.shields.io/pypi/pyversions/r2g?logo=python&style=plastic) ![travis](https://img.shields.io/travis/yangwu91/r2g?logo=travis&style=plastic) ![Codecov](https://img.shields.io/codecov/c/gh/yangwu91/r2g?logo=codecov&style=plastic) ![docker](https://img.shields.io/docker/cloud/build/yangwu91/r2g?logo=docker&style=plastic) ![licence](https://img.shields.io/github/license/yangwu91/r2g?logo=open-source-initiative&style=plastic)
 
-<div align=center><img src="https://raw.githubusercontent.com/yangwu91/r2g/master/images/banner.png" alt="banner"/></div>
 
-#### 
+
   * [Introduction](#introduction)
   * [Implementation](#implementation)
-     * [Pull the Docker image (recommended)](#pull-the-docker-image-recommended)
-     * [Manually installation](#manually-installation)
+     * [Pulling the Docker image (recommended)](#pulling-the-docker-image-recommended)
+     * [Manual installation](#manual-installation)
         * [Required third-party applications](#required-third-party-applications)
            * [1. NCBI SRA Toolkit](#1-ncbi-sra-toolkit)
            * [2. Trinity](#2-trinity)
@@ -20,16 +19,18 @@
         * [Get the sequence of a homologous gene from a well-studied species](#get-the-sequence-of-a-homologous-gene-from-a-well-studied-species)
         * [Select a public SRA database for the species to be investigated](#select-a-public-sra-database-for-the-species-to-be-investigated)
         * [Run the r2g pipeline](#run-the-r2g-pipeline)
-        * [Check out the result](#check-out-the-result)
+        * [Review the result](#review-the-result)
 
 
 ## Introduction
+
+<div align=center><img src="https://raw.githubusercontent.com/yangwu91/r2g/master/images/banner.png" alt="banner"/></div>
 
 **Reads to genes**, or **r2g**, is a computationally lightweight and homology-based pipeline that allows rapid identification of genes or gene families from raw sequence databases in the absence of an assembly, by taking advantage of  over 10,000 terabases of sequencing data for all kinds of species deposited in  [Sequence Read Archive](https://www.ncbi.nlm.nih.gov/sra) hosted by [National Center for Biotechnology Information](https://www.ncbi.nlm.nih.gov/), which can be effectively run on **most common computers without high-end specs**.
 
 ## Implementation
 
-### Pull the Docker image (recommended)
+### Pulling the Docker image (recommended)
 
 Please follow the instruction [here](https://docs.docker.com/get-docker/) to download and install Docker based on your operating system before running the Docker image. This is **recommended** as it is compatible with most common operating systems including Linux, macOS and Windows.
 
@@ -41,7 +42,7 @@ docker pull yangwu91/r2g:latest
 
 Now, you are good to go.
 
-### Manually installation
+### Manual installation
 
 #### Required third-party applications
 

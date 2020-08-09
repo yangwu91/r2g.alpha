@@ -10,9 +10,9 @@
      * [Pull the Docker image (recommended)](#pull-the-docker-image-recommended)
      * [Manually installation](#manually-installation)
         * [Required third-party applications](#required-third-party-applications)
-           * [NCBI SRA Toolkit](#ncbi-sra-toolkit)
-           * [Trinity](#trinity)
-           * [Google Chrome web browser with ChromeDriver](#google-chrome-web-browser-with-chromedriver)
+           * [1. NCBI SRA Toolkit](#1-ncbi-sra-toolkit)
+           * [2. Trinity](#2-trinity)
+           * [3. Google Chrome web browser with ChromeDriver](#3-google-chrome-web-browser-with-chromedriver)
         * [Installing the r2g package](#installing-the-r2g-package)
   * [Usage](#usage)
      * [Specific options for running the Docker image](#specific-options-for-running-the-docker-image)
@@ -47,7 +47,7 @@ Now, you are good to go.
 
 The r2g required 3 third-party software packages including [NCBI SRA Toolkit](https://github.com/ncbi/sra-tools), [Trinity](https://github.com/trinityrnaseq/trinityrnaseq), and [Google Chrome web browser](https://www.google.com/chrome/) with [ChromeDriver](https://chromedriver.chromium.org/downloads) (or [selenium/standalone-chrome](https://github.com/SeleniumHQ/docker-selenium/tree/trunk/StandaloneChrome) Docker image). 
 
-##### NCBI SRA Toolkit
+##### 1. NCBI SRA Toolkit
 
 Download pre-built binaries for **all platforms** [here](https://github.com/ncbi/sra-tools/wiki/01.-Downloading-SRA-Toolkit) or compile the source code [here](https://github.com/ncbi/sra-tools/releases) by yourself.
 
@@ -57,7 +57,7 @@ For **Linux** and **macOS** users, it also can be installed using [Conda](https:
 conda install -c bioconda sra-tools
 ```
 
-##### Trinity
+##### 2. Trinity
 
 Follow the [instruction](https://github.com/trinityrnaseq/trinityrnaseq/wiki/Installing-Trinity) to compile the source code. Please note that Trinity has its own dependencies, including [samtools](https://github.com/samtools/samtools), [Python 3](https://www.python.org/) with [NumPy](https://numpy.org/install/), [bowtie2](http://bowtie-bio.sourceforge.net/bowtie2/index.shtml), [jellytfish](http://www.genome.umd.edu/jellyfish.html), [salmon](https://salmon.readthedocs.io/en/latest/salmon.html), and [trimmomatic](http://www.usadellab.org/cms/?page=trimmomatic).
 
@@ -69,7 +69,7 @@ conda install -c bioconda trinity=2.8.5 numpy samtools=1.10
 
 The Trinity **Version 2.8.5** has been fully tested, and theoretically, the later versions should work too.
 
-##### Google Chrome web browser with ChromeDriver
+##### 3. Google Chrome web browser with ChromeDriver
 
 First, please install [Google Chrome web browser](https://www.google.com/chrome/). Second, please download the corresponding version of [ChromeDriver](https://chromedriver.chromium.org/downloads). 
 
@@ -149,21 +149,21 @@ While executing the Docker image, some specific options are required: `-v /dev/s
 
 - The option `-u $UID` sets the owner of the Docker outputs. Ignoring it will raise permission errors.
 
-Let's say there is a folder named `r2g_workspace` in your home `/home/user`. As a result, the the simplest full command to run a Docker image should be:
+Let's say there is a query file in FASTA format named `QUERY.fasta` in the folder `/home/user/r2g_workspace/`. As a result, the the simplest full command to run a Docker image should be:
 
 ```bash
-docker run -it -v /dev/shm:/dev/shm -v /home/user/r2g_workspace:/workspace -u $UID yangwu91/r2g:latest -o OUTPUT -q /home/user/r2g_workspace/QUERY.fasta -s SRXNNNNNN
+docker run -it -v /dev/shm:/dev/shm -v /home/user/r2g_workspace:/workspace -u $UID yangwu91/r2g:latest -o OUTPUT -q QUERY.fasta -s SRXNNNNNN
 ```
 
 After that, you can check out the results in the folder `/home/user/r2g_workspace/OUTPUT/`.
 
-### An example: finding "inexistent" *S6K* gene in a mosquito species
+### An example: finding the "non-existent" *S6K* gene in a mosquito species
 
-We applied the r2g pipeline to search the gene *S6K* (`AAEL018120` from *Aedes aegypti*) in *Aedes albopictus* SRA experiment `SRX885420` (https://www.ncbi.nlm.nih.gov/sra/SRX885420) using the engine `blastn`. Detailed workflow is described as follows:
+We applied the r2g pipeline to search the gene *S6K* (i.e. `AAEL018120` from *Aedes aegypti*, which is a well-studied species) in *Aedes albopictus* SRA experiment `SRX885420` (https://www.ncbi.nlm.nih.gov/sra/SRX885420) using the engine `blastn`. Detailed workflow is described as follows:
 
-#### Get the sequence of a homologous gene from a well-studied species
+#### Retrieve the sequence of a homologous gene for a well-studied species
 
-Download nucleotide/protein sequences of *Aedes aegypti S6K* from VectorBase, Ensembl, NCBI or other online databases, and let’s say it was saved as the file `/home/user/r2g_orkspace/AAEL018120-RE.S6K.fasta`.
+Download nucleotide/protein sequences of *Aedes aegypti S6K* from VectorBase, Ensembl, NCBI or other online databases, and let’s say it was saved as the file `/home/user/r2g_orkspace/AAEL018120-RE.S6K.fasta`. *Aedes aegypti* is a well-studied mosquito species.
 
 ![lure](https://raw.githubusercontent.com/yangwu91/r2g/master/images/20191024163424.png)
 
@@ -178,15 +178,15 @@ Select a proper SRA experiment for *Aedes albopictus* (e.g. `SRX885420`). Some g
 Run the r2g pipeline. Here, we chopped the query (`/home/user/r2g_workspace/AAEL018120-RE.S6K.fasta`) into 80-base fragments overlapping 50 bases. The command line is as follows:
 
 ```bash
+docker run -it -v /dev/shm:/dev/shm -v /home/user/r2g_workspace:/workspace -u $UID yangwu91/r2g:latest -o /workspace/S6K_q-aae_s-SRX885420_c-80.50_p-blastn -s SRX885420 -q /workspace/AAEL018120-RE.S6K.fasta --cut 80,50 -p blastn
+```
+
+Or,
+
+```bash
 r2g -o /home/user/r2g_workspace/S6K_q-aae_s-SRX885420_c-80.50_p-blastn -s SRX885420 -q /home/user/r2g_workspace/AAEL018120-RE.S6K.fasta --cut 80,50 -p blastn
 ```
 
-Or:
+#### Review the result
 
-```bash
-docker run -it -v /dev/shm:/dev/shm -v /home/user/r2g_workspace:/workspace -u $UID yangwu91/r2g:latest -o /home/user/r2g_workspace/S6K_q-aae_s-SRX885420_c-80.50_p-blastn -s SRX885420 -q /home/user/r2g_workspace/AAEL018120-RE.S6K.fasta --cut 80,50 -p blastn
-```
-
-#### Check out the result
-
-The sequence file in FASTA format of the predicted *Aedes albopictus S6K* is in the folder `/home/user/r2g_workspace/S6K_q-aae_s-SRX885420_c-80.50_p-blastn/`. Please verify the sequences by the PCR amplification if necessary.
+The sequence file in FASTA format of the predicted *Aedes albopictus S6K* is in the folder `/home/user/r2g_workspace/S6K_q-aae_s-SRX885420_c-80.50_p-blastn/`. Please verify the sequences by the PCR amplification or other methods if necessary.

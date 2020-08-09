@@ -4,7 +4,24 @@
 
 <div align=center><img src="https://raw.githubusercontent.com/yangwu91/r2g/master/images/banner.png" alt="banner"/></div>
 
-[TOC]
+#### 
+  * [Introduction](#introduction)
+  * [Implementation](#implementation)
+     * [Pull the Docker image (recommended)](#pull-the-docker-image-recommended)
+     * [Manually installation](#manually-installation)
+        * [Required third-party applications](#required-third-party-applications)
+           * [NCBI SRA Toolkit](#ncbi-sra-toolkit)
+           * [Trinity](#trinity)
+           * [Google Chrome web browser with ChromeDriver](#google-chrome-web-browser-with-chromedriver)
+        * [Installing the r2g package](#installing-the-r2g-package)
+  * [Usage](#usage)
+     * [Specific options for running the Docker image](#specific-options-for-running-the-docker-image)
+     * [An example: finding "inexistent" <em>S6K</em> gene in a mosquito species](#an-example-finding-inexistent-s6k-gene-in-a-mosquito-species)
+        * [Get the sequence of a homologous gene from a well-studied species](#get-the-sequence-of-a-homologous-gene-from-a-well-studied-species)
+        * [Select a public SRA database for the species to be investigated](#select-a-public-sra-database-for-the-species-to-be-investigated)
+        * [Run the r2g pipeline](#run-the-r2g-pipeline)
+        * [Check out the result](#check-out-the-result)
+
 
 ## Introduction
 

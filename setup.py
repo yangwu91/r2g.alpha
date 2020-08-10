@@ -17,8 +17,8 @@ setup(
     author_email='wuyang@drwu.ga',
     maintainer="Yang Wu",
     maintainer_email="wuyang@drwu.ga",
-    description='A light-weight pipeline for identifying, retrieving, and assembling homologous genes utilizing the '
-                'NCBI SRA database.',
+    description='A computationally lightweight and homology-based pipeline that allows rapid identification of '
+                'genes or gene families from raw sequence databases in the absence of an assembly',
     long_description=long_description,
     long_description_content_type="text/markdown",
     python_requires='>=3.6',

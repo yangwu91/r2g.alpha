@@ -191,7 +191,8 @@ def query(args, webdriver):
                         time.sleep(11 - interval)
                     start_time = time.time()
                     if len(err) > 0:
-                        utils.log("Retrying...", shift="\n")
+                        # utils.log("Retrying...", shift="\n")
+                        utils.log("Retrying...")
                     try:
                         result = NCBIWWW_selenium.qblast(
                             program=args["program"],

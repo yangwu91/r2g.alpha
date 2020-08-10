@@ -13,10 +13,11 @@
            * [2. Trinity](#2-trinity)
            * [3. Google Chrome web browser with ChromeDriver](#3-google-chrome-web-browser-with-chromedriver)
         * [Installing the r2g package](#installing-the-r2g-package)
+        * [Setting up the environment](#setting-up-the-environment)
   * [Usage](#usage)
      * [Specific options for running the Docker image](#specific-options-for-running-the-docker-image)
      * [An example: finding "inexistent" <em>S6K</em> gene in a mosquito species](#an-example-finding-inexistent-s6k-gene-in-a-mosquito-species)
-        * [Get the sequence of a homologous gene from a well-studied species](#get-the-sequence-of-a-homologous-gene-from-a-well-studied-species)
+        * [Retrieve the sequence of a homologous gene from a well-studied species](#retrieve-the-sequence-of-a-homologous-gene-from-a-well-studied-species)
         * [Select a public SRA database for the species to be investigated](#select-a-public-sra-database-for-the-species-to-be-investigated)
         * [Run the r2g pipeline](#run-the-r2g-pipeline)
         * [Review the result](#review-the-result)
@@ -95,7 +96,18 @@ The r2g package has been deposited to PyPI, so it can be installed as follows:
 pip install r2g
 ```
 
-If those required third-party applications above are not in `$PATH`, you have to follow the prompts to set up the path to the executable files manually before the first run. And then, you are good to go.
+#### Setting up the environment
+
+If these required third-party applications above are installed using Conda, you don't need to take care of it. 
+
+If these packages are compiled or downloaded by yourself, either include them in `$PATH` separately by a command as follows:
+
+```
+export PATH="$PATH:/path/to/fastq-dump:/path/to/Trinity:/path/to/chromedriver"                   # Linux and macOS
+set PATH=%PATH%;DRIVER:\path\to\fastq-dump;DRIVER:\path\to\Trinity;DRIVER:\path\to\chromedriver  # Windows
+```
+
+or follow the prompts to set up the path to the executable files manually before the first run. And then, you are good to go.
 
 ## Usage
 

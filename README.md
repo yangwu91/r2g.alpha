@@ -80,7 +80,7 @@ The compatibility of Trinity **Version 2.8.5** with r2g has been fully tested, a
 
 ##### 3. Google Chrome web browser with ChromeDriver
 
-First, please install [Google Chrome web browser](https://www.google.com/chrome/). Second, please download the corresponding version of [ChromeDriver](https://chromedriver.chromium.org/downloads). 
+Install [Google Chrome web browser](https://www.google.com/chrome/) and then download the corresponding version of [ChromeDriver](https://chromedriver.chromium.org/downloads). 
 
 Or, you can simply run [selenium/standalone-chrome](https://github.com/SeleniumHQ/docker-selenium/tree/trunk/StandaloneChrome) Docker image in background (make sure you have the permission to bind the 4444 port on local host):
 
@@ -95,7 +95,7 @@ The r2g package has been deposited to PyPI, so it can be installed as follows:
 pip install r2g
 ```
 
-After installing the dependencies and r2g package, now you are good to go.
+If those required third-party applications above are not in `$PATH`, you have to follow the prompts to set up the path to the executable files manually before the first run. And then, you are good to go.
 
 ## Usage
 

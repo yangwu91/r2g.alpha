@@ -14,7 +14,7 @@ case $TRAVIS_OS_NAME in
     linux)
         sudo apt-get -yyq update
         sudo apt-get -yyq install libxml-libxml-perl uuid-runtime
-        conda install -qy sra-tools="$SRA" trinity="$TRINITY" numpy
+        conda install -qy sra-tools="$SRA" trinity="$TRINITY" numpy samtools=1.10
     ;;
     osx)
         brew install gcc@8
@@ -26,7 +26,7 @@ case $TRAVIS_OS_NAME in
 	      rm -rf ./util/support_scripts/tests && cd ..  # It is not compatible with python 3 and pytest!
 	      # The version of sra-tools in macOS channel is not the latest, so don't specify it here.
 	      # The default version of samtools is 1.4, which doesn't work, so set it to the latest (1.10).
-	      conda install -qy python="$PYTHON" sra-tools samtools=1.10 numpy bowtie bowtie2 kmer-jellyfish salmon trimmomatic
+	      conda install -qy python="$PYTHON" sra-tools numpy bowtie bowtie2 kmer-jellyfish salmon trimmomatic samtools=1.10
     ;;
 esac
 mkdir -p "${HOME}"/.ncbi

@@ -14,7 +14,7 @@ from r2g import errors
 
 if __name__ == "__main__":
     args = utils.parse_arguments(sys.argv[1:])
-    print("\033[1;37m{}\033[0m".format(r2g.__banner__))
+    print(r2g.__banner__)
     print(" {} {} (Python {})\n".format(r2g.__title__, r2g.__version__, platform.python_version()))
     utils.log(args, args['verbose'], 'debug')
     app_json = utils.preflight(args)
@@ -58,7 +58,7 @@ if __name__ == "__main__":
                         utils.log("Errors occurred while fetching sequences. Retrying...", shift="\n")
                         retry += 1
                         if retry == int(args['retry']):
-                            utils.log("\033[1;33mWARNING:\033[0m couldn't fetch sequences from the spots {} - {} "
+                            utils.log("WARNING: couldn't fetch sequences from the spots {} - {} "
                                       "in the sra {} after {} retries. Skipped. "
                                       "Errors from fastq-dump below must be investigated: "
                                       "{}".format(item[0], spot[0], spot[1], retry, err))
@@ -77,7 +77,7 @@ if __name__ == "__main__":
             if len(sra_sequences.keys()) < 2:
                 paired = False
             if paired is False and len(sra_sequences.keys()) > 1:
-                utils.log("\033[1;33mWARNING:\033[0m since some of fastq files are paired but some are not, "
+                utils.log("WARNING: since some of fastq files are paired but some are not, "
                           "all fastq files will be taken as singled-end files while being fed to Trinity.")
         fd_log.close()
         # Trinity:
@@ -88,11 +88,11 @@ if __name__ == "__main__":
         if args['stage'] == 'chrysalis' or args['stage'] == 'butterfly':
             final_result = os.path.join(args['outdir'], "{}.homologs.{}.fasta".format(seq_name, utils.stamp()))
             cleanup_items.append(trinity_dir)
-            utils.log("The final assembled homologous gene was written to \033[1;36m{}\033[0m".format(final_result))
+            utils.log("The final assembled homologous gene was written to {}.".format(final_result))
         else:
             final_result = os.path.join(args['outdir'], "r2g_results-{}.{}".format(args['stage'], utils.stamp()))
             utils.log('r2g stopped at the stage "{}" as you requested.'.format(args['stage']))
-            utils.log("The final results are in the folder \033[1;36m{}\033[0m".format(final_result))
+            utils.log("The final results are in the folder {}.".format(final_result))
         trinity.copyto(final_result)
 
         # Clean up:

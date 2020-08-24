@@ -22,11 +22,12 @@ def log(info, verbose=False, attr='info', shift=""):
         pass
     else:
         # time in grey color
-        print("{}\033[1;37m[{}]\033[0m {}".format(
+        sys.stdout.write("{}[{}] {}\n".format(
             shift,
             time.strftime("%m-%d-%Y %H:%M:%S", time.localtime()),
             info)
         )
+        sys.stdout.flush()
 
 
 def stamp():
@@ -265,7 +266,7 @@ def parse_arguments(raw_args):
     else:
         cut = args_dict["cut"].split(',')
         try:
-            frag, ovlp = int(cut[0]), int(cut[-1])
+            frag, _ = int(cut[0]), int(cut[-1])
         except (ValueError, IndexError):
             raise errors.InputError("The option --cut must be followed by two integers separated by a comma.")
         if args_dict['program'] in ["tblastn", "tblastx"] and frag > 50:
@@ -388,9 +389,10 @@ def preflight(args):
                 alphabet[chr] = None
             alphabets[i] = deepcopy(alphabet)
         if seq.strip()[0] == ">":
-            seq = ''.join(seq.strip().split('\n')[1:]).upper()
+            seq = ''.join(seq.strip().splitlines()[1:]).upper()
         else:
-            seq = ''.join(seq.strip().split('\n')).upper()
+            seq = ''.join(seq.strip().splitlines()).upper()
+        seq = ''.join(seq.strip().split())  # remove blanks
         is_seq = [True, True]
         for i in range(2):
             for letter in seq:
@@ -509,7 +511,7 @@ def preflight(args):
                 log("Don't have permission to save the config. You may have to re-config it next time.")
             if config_file is not None:
                 choice = _ask_yes_or_no(
-                    "Do you want to keep the config file? ([Y]/N) ".format(config_file)
+                    "Do you want to keep the config file {}? ([Y]/N) ".format(config_file)
                 )
                 if choice:
                     with open(config_file, 'w') as outf:

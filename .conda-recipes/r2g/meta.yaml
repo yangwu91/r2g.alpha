@@ -1,0 +1,53 @@
+{% set name = "r2g" %}
+{% set version = "1.0.2" %}
+
+package:
+  # name: "{{ name|lower }}"
+  name: r2g.dev
+  version: "{{ version }}"
+
+source:
+  url: "https://test.pypi.org/packages/source/{{ name[0] }}/{{ name }}/{{ name }}-{{ version }}.tar.gz"
+  sha256: 71d397a993248b56d8ad80bca585fa2676bb232f2cb50732845228f76e0e2473
+
+build:
+  number: 0
+  noarch: python
+  script: "{{ PYTHON }} -m pip install . -vv"
+  skip: True  # [osx]
+
+requirements:
+  host:
+    - pip
+    - python >=3.6
+    - requests >=2.24.0,<2.25
+    - selenium >=3.141.0,<3.142
+  run:
+    - python >=3.6
+    - requests >=2.24.0,<2.25
+    - selenium >=3.141.0,<3.142
+    - sra-tools
+    - trinity =2.8.5
+    - samtools >=1.9
+    - numpy
+
+test:
+  imports:
+    - r2g
+    - r2g.local
+    - r2g.online
+    - r2g.utils
+
+about:
+  home: "https://github.com/yangwu91/r2g.git"
+  license: MIT
+  license_family: MIT
+  license_file: LICENSE
+  summary: "A computationally lightweight and homology-based pipeline that allows rapid identification of genes or gene families from raw sequence databases in the absence of an assembly"
+  doc_url: "https://github.com/yangwu91/r2g/wiki"
+  dev_url: "https://github.com/yangwu91/r2g.git"
+
+extra:
+  recipe-maintainers:
+    - yangwu91
+

@@ -23,13 +23,13 @@ jobs:
     - name: Lint with flake8
       run: |
         flake8 . --count --exit-zero --max-line-length=120 --statistics
-    - name: Build and publish
-      env:
-        TWINE_USERNAME: __token__
-        TWINE_PASSWORD: ${{ secrets.TESTPYPI_TOKEN }}
-      run: |
-        python setup.py sdist bdist_wheel
-        twine upload --repository-url https://test.pypi.org/legacy/ dist/*
+#    - name: Build and publish
+#      env:
+#        TWINE_USERNAME: __token__
+#        TWINE_PASSWORD: ${{ secrets.TESTPYPI_TOKEN }}
+#      run: |
+#        python setup.py sdist bdist_wheel
+#        twine upload --repository-url https://test.pypi.org/legacy/ dist/*
 #    - name: conda-action
 #      # You may pin to the exact commit or the version.
 #      # uses: matthewrmshin/conda-action@30b05074c13b5c482cc747c0f81c0e9707c063e0

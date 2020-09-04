@@ -36,7 +36,7 @@ if __name__ == "__main__":
     else:
         # fd_outdir refers to the output folder for fastq-dump:
         fd_stamp = utils.stamp()
-        fd_outdir = os.path.join(args['outdir'], "fastq-dump_output_{}".format( fd_stamp))
+        fd_outdir = os.path.join(args['outdir'], "fastq-dump_output_{}".format(fd_stamp))
         utils.log("Creating a folder for fastq-dump: {}".format(fd_outdir))
         os.mkdir(fd_outdir, 0o750)
         # start downloading:
@@ -81,19 +81,23 @@ if __name__ == "__main__":
                           "all fastq files will be taken as singled-end files while being fed to Trinity.")
         fd_log.close()
         # Trinity:
-        utils.log("Calling Trinity.")
-        trinity = assemblers.Trinity(args, app_json, fastq_list, paired)
-        trinity_dir = trinity.run()
         cleanup_items = [fd_log_file, fd_outdir]
-        if args['stage'] == 'chrysalis' or args['stage'] == 'butterfly':
-            final_result = os.path.join(args['outdir'], "{}.homologs.{}.fasta".format(seq_name, utils.stamp()))
-            cleanup_items.append(trinity_dir)
-            utils.log("The final assembled homologous gene was written to {}.".format(final_result))
+        if args['stage'] == "no_trinity":
+            utils.log('R2g stopped without the assembly stage as you requested.')
+            utils.log('All valid sequencing reads were downloaded to {}.'.format(fd_outdir))
         else:
-            final_result = os.path.join(args['outdir'], "r2g_results-{}.{}".format(args['stage'], utils.stamp()))
-            utils.log('r2g stopped at the stage "{}" as you requested.'.format(args['stage']))
-            utils.log("The final results are in the folder {}.".format(final_result))
-        trinity.copyto(final_result)
+            utils.log("Calling Trinity.")
+            trinity = assemblers.Trinity(args, app_json, fastq_list, paired)
+            trinity_dir = trinity.run()
+            if args['stage'] == 'chrysalis' or args['stage'] == 'butterfly':
+                final_result = os.path.join(args['outdir'], "{}.homologs.{}.fasta".format(seq_name, utils.stamp()))
+                cleanup_items.append(trinity_dir)
+                utils.log("The final assembled homologous gene was written to {}.".format(final_result))
+            else:
+                final_result = os.path.join(args['outdir'], "r2g_results-{}.{}".format(args['stage'], utils.stamp()))
+                utils.log('R2g stopped at the stage "{}" as you requested.'.format(args['stage']))
+                utils.log("The final results are in the folder {}.".format(final_result))
+            trinity.copyto(final_result)
 
         # Clean up:
         if args['cleanup']:

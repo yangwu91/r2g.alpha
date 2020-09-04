@@ -77,7 +77,9 @@ def parse_arguments(raw_args):
     parser.add_argument("-V", "--version",
                         help="Print the version.",
                         action="version",
-                        version="{} ({}) Version {}".format(r2g.__title__, r2g.__full_name__, r2g.__version__))
+                        version="{}\n{} ({}) Version {}".format(
+                            r2g.__banner__, r2g.__title__, r2g.__full_name__, r2g.__version__)
+                        )
     parser.add_argument("-v", "--verbose",
                         help="Print detailed log.",
                         action="store_true",
@@ -271,7 +273,7 @@ def parse_arguments(raw_args):
             raise errors.InputError("The option --cut must be followed by two integers separated by a comma.")
         if args_dict['program'] in ["tblastn", "tblastx"] and frag > 50:
             # raise a warning when input sequences are amino acids but fragment is too high:
-            log('\033[1;33mWARNING:\033[0m input query sequences are supposed to be amino acids '
+            log('WARNING: input query sequences are supposed to be amino acids '
                 'but the parameter "fragment" from the option "--cut"/"-c" was set too high.'
                 'R2g will proceed anyway but some weak BLAST hits may be ignored due to the settings')
     return args_dict

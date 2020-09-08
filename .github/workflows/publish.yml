@@ -32,7 +32,9 @@ jobs:
 #        twine upload --repository-url https://test.pypi.org/legacy/ dist/*
     - name: Build and publish to custom Conda channel
       run: |
-        conda install -y conda-build anaconda
+        conda install -y anaconda-client conda-build conda-verify
+        conda config --set anaconda_upload yes
+        anaconda upload --help
         export VERSION=$(grep -o "[0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}" src/r2g/__init__.py)
         echo "::set-env name=VERSION::$VERSION"
         sed -i "s/version = \"[0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}\"/version =\"${VERSION}\"/" conda-recipes/meta.yaml

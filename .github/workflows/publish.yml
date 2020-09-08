@@ -37,8 +37,10 @@ jobs:
         echo "::set-env name=VERSION::$VERSION"
         sed -i "s/version = \"[0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}\"/version =\"${VERSION}\"/" conda-recipes/meta.yaml
         export SHA=$(sha256sum dist/r2g-${VERSION}.tar.gz |cut -f 1 -d " ")
+        export SHA="62b0b23e15fb26fca3e33e6b895d4b758b393f5cd6b99ad54c72db9531022b01"
         echo "::set-env name=SHA::$SHA"
         sed -i "s/sha256: .\+/sha256: $SHA/" conda-recipes/meta.yaml
+        cat conda-recipes/meta.yaml
         conda build -c conda-forge -c bioconda --output-folder conda-recipes conda-recipes
         export ANACONDA_API_TOKEN=${{ secrets.ANACONDA_TOKEN }}
         anaconda upload -p r2g.dev -u yangwu91 --label main -v ${VERSION} conda-recipes/noarch/r2g.dev-${VERSION}.tar.bz2

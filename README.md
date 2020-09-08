@@ -2,7 +2,7 @@
 
 [![PyPI](https://img.shields.io/pypi/v/r2g?logo=pypi&style=flat)](https://pypi.org/project/r2g/) [![py_ver](https://img.shields.io/pypi/pyversions/r2g?logo=python&style=flat)](https://pypi.org/project/r2g/) ![travis](https://img.shields.io/travis/yangwu91/r2g?logo=travis&style=flat) ![Codecov](https://img.shields.io/codecov/c/gh/yangwu91/r2g?logo=codecov&style=flat) [![docker](https://img.shields.io/docker/cloud/build/yangwu91/r2g?logo=docker&style=flat)](https://hub.docker.com/repository/docker/yangwu91/r2g) ![licence](https://img.shields.io/github/license/yangwu91/r2g?logo=open-source-initiative&style=flat)
 
-[![Conda](https://img.shields.io/conda/v/yangwu91/r2g?logo=anaconda&style=flat)](https://anaconda.org/yangwu91/r2g)[![install with conda](https://img.shields.io/badge/install%20with-conda-brightgreen.svg?style=flat)](#installing-with-conda-channels-for-linux-users)
+[![Conda](https://img.shields.io/conda/v/yangwu91/r2g?logo=anaconda&style=flat)](https://anaconda.org/yangwu91/r2g) [![install with conda](https://img.shields.io/badge/install%20with-conda-brightgreen.svg?style=flat)](#installing-with-conda-channels-for-linux-users)
 
 
   * [Introduction](#introduction)

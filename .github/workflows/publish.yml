@@ -30,11 +30,8 @@ jobs:
       run: |
         python setup.py sdist bdist_wheel
 #        twine upload --repository-url https://test.pypi.org/legacy/ dist/*
-    - name: Build and publish to custom Conda channel
+    - name: Prepare meta.yaml for conda build
       run: |
-        conda install -y anaconda-client conda-build conda-verify
-        conda config --set anaconda_upload yes
-        anaconda upload --help
         export VERSION=$(grep -o "[0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}" src/r2g/__init__.py)
         echo "::set-env name=VERSION::$VERSION"
         sed -i "s/version = \"[0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}\"/version =\"${VERSION}\"/" conda-recipes/meta.yaml
@@ -43,11 +40,14 @@ jobs:
         echo "::set-env name=SHA::$SHA"
         sed -i "s/sha256: .\+/sha256: $SHA/" conda-recipes/meta.yaml
         cat conda-recipes/meta.yaml
-        conda build -c conda-forge -c bioconda --output-folder conda-recipes conda-recipes
-        export ANACONDA_API_TOKEN=${{ secrets.ANACONDA_TOKEN }}
-        anaconda upload -p r2g.dev -u yangwu91 --label main -v ${VERSION} conda-recipes/noarch/r2g.dev-${VERSION}.tar.bz2
-        anaconda logout
-    - name: Pre-Docker build
+    - name: Build and publish to custom Conda channel
+      uses: yangwu91/bioconda@1.0
+      with:
+        mirror: 'default'
+        packages: 'anaconda-client'
+        cmd: "anaconda upload --help; export ANACONDA_API_TOKEN=${{ secrets.ANACONDA_TOKEN }}; anaconda upload -p r2g.dev -u yangwu91 --label main -v ${{ env.VERSION }} conda-recipes/noarch/r2g.dev-${{ env.VERSION }}.tar.bz2"
+        args: 'anaconda logout'
+    - name: Prepare for Docker build
       run : |
         cd docker
         make docker

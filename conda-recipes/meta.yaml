@@ -39,7 +39,7 @@ test:
     - r2g.utils
 
 about:
-  home: "https://github.com/yangwu91/r2g.git"
+  home: "https://yangwu91.github.io/r2g/"
   license: MIT
   license_family: MIT
   license_file: LICENSE

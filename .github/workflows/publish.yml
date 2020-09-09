@@ -48,8 +48,7 @@ jobs:
         /opt/miniconda3/bin/conda update -y --all
         /opt/miniconda3/bin/conda install anaconda-client conda-build conda-verify
         /opt/miniconda3/bin/conda build -c conda-forge -c bioconda --output-folder conda-recipes conda-recipes
-        /opt/miniconda3/bin/anaconda upload --help
-        /opt/miniconda3/bin/anaconda upload -p r2g.dev -u yangwu91 --label main -v $VERSION conda-recipes/noarch/r2g.dev-$VERSION.tar.bz2
+        /opt/miniconda3/bin/anaconda upload -p r2g.dev -u yangwu91 --label main -v $VERSION $(ls conda-recipes/noarch/r2g*.tar.bz2)
         /opt/miniconda3/bin/anaconda logout
     - name: Prepare for Docker build
       run : |

@@ -50,10 +50,12 @@ jobs:
         #/opt/miniconda3/bin/conda build -c conda-forge -c bioconda --output-folder conda-recipes conda-recipes
         #/opt/miniconda3/bin/anaconda upload -p r2g.dev -u yangwu91 --label main -v $VERSION $(ls conda-recipes/noarch/r2g*.tar.bz2)
         #/opt/miniconda3/bin/anaconda logout
-    - name: Prepare for Docker build
+    - name: Docker build and push
       run : |
         cd docker
         make docker
+        pwd
+        ls -lh ./
         cd ..
     - name: Docker build and push
       uses: docker/build-push-action@v1.1.0

@@ -63,5 +63,5 @@ jobs:
         repository: r2g.docker.test
         tags: latest,${{ env.VERSION }}
         path: docker
-        dockerfile: Dockerfile
+        dockerfile: docker/Dockerfile
         push: true

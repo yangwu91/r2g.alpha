@@ -40,17 +40,16 @@ jobs:
         export SHA=$(sha256sum dist/r2g-${VERSION}.tar.gz |cut -f 1 -d " ")
         export SHA="62b0b23e15fb26fca3e33e6b895d4b758b393f5cd6b99ad54c72db9531022b01"
         sed -i "s/sha256: .\+/sha256: $SHA/" conda-recipes/meta.yaml
-        cat conda-recipes/meta.yaml
-        wget -qO miniconda3.sh https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh
-        bash miniconda3.sh -bfp /opt/miniconda3
-        /opt/miniconda3/bin/conda config --add channels defaults
-        /opt/miniconda3/bin/conda config --add channels bioconda
-        /opt/miniconda3/bin/conda config --add channels conda-forge
-        /opt/miniconda3/bin/conda update -y --all
-        /opt/miniconda3/bin/conda install anaconda-client conda-build conda-verify
-        /opt/miniconda3/bin/conda build -c conda-forge -c bioconda --output-folder conda-recipes conda-recipes
-        /opt/miniconda3/bin/anaconda upload -p r2g.dev -u yangwu91 --label main -v $VERSION $(ls conda-recipes/noarch/r2g*.tar.bz2)
-        /opt/miniconda3/bin/anaconda logout
+        #wget -qO miniconda3.sh https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh
+        #bash miniconda3.sh -bfp /opt/miniconda3
+        #/opt/miniconda3/bin/conda config --add channels defaults
+        #/opt/miniconda3/bin/conda config --add channels bioconda
+        #/opt/miniconda3/bin/conda config --add channels conda-forge
+        #/opt/miniconda3/bin/conda update -y --all
+        #/opt/miniconda3/bin/conda install anaconda-client conda-build conda-verify
+        #/opt/miniconda3/bin/conda build -c conda-forge -c bioconda --output-folder conda-recipes conda-recipes
+        #/opt/miniconda3/bin/anaconda upload -p r2g.dev -u yangwu91 --label main -v $VERSION $(ls conda-recipes/noarch/r2g*.tar.bz2)
+        #/opt/miniconda3/bin/anaconda logout
     - name: Prepare for Docker build
       run : |
         cd docker

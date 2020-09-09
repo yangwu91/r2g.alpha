@@ -36,6 +36,7 @@ jobs:
       run: |
         export VERSION=$(grep -o "[0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}" src/r2g/__init__.py)
         sed -i "s/version = \"[0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}\"/version =\"${VERSION}\"/" conda-recipes/meta.yaml
+        echo "::set-env name=VERSION::$VERSION"
         export SHA=$(sha256sum dist/r2g-${VERSION}.tar.gz |cut -f 1 -d " ")
         export SHA="62b0b23e15fb26fca3e33e6b895d4b758b393f5cd6b99ad54c72db9531022b01"
         sed -i "s/sha256: .\+/sha256: $SHA/" conda-recipes/meta.yaml

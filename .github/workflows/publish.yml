@@ -51,21 +51,16 @@ jobs:
         #/opt/miniconda3/bin/anaconda upload -p r2g.dev -u yangwu91 --label main -v $VERSION $(ls conda-recipes/noarch/r2g*.tar.bz2)
         #/opt/miniconda3/bin/anaconda logout
     - name: Docker build and push
+      env:
+        VERSION: ${{ env.VERSION }}
+        NAME: r2g.docker.test
+        PASSWORD: ${{ secrets.DOCKER_TOKEN }}
       run : |
         cd docker
         make docker
-        pwd
-        ls -lh ./
         docker --version
-        docker build --help
-        cd ..
-    - name: Docker build and push
-      uses: docker/build-push-action@v1.1.0
-      with:
-        username: yangwu91
-        password: ${{ secrets.DOCKER_TOKEN }}
-        repository: r2g.docker.test
-        tags: latest,${{ env.VERSION }}
-        path: docker
-        dockerfile: docker/Dockerfile
-        push: true
+        docker build -f Dockerfile -t ${NAME}:${VERSION} -t ${NAME}:latest .
+        docker login --username yangwu91 --password $PASSWORD
+        docker push yangwu91/${NAME}:latest
+        docker push yangwu91/${NAME}:${VERSION}
+        docker logout

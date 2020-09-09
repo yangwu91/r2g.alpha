@@ -20,9 +20,9 @@ ENV PATH="/opt/miniconda3/bin:/opt/bin:$PATH"
 
 EXPOSE 4444
 
-ADD docker/configs.tar.gz /tmp/
-ADD docker/scripts.tar.gz /tmp/
-ADD docker/selenium-server.tar.gz /tmp/
+ADD configs.tar.gz /tmp/
+ADD scripts.tar.gz /tmp/
+ADD selenium-server.tar.gz /tmp/
 
 RUN \
     #============================================

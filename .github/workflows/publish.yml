@@ -59,7 +59,7 @@ jobs:
         cd docker
         make docker
         docker --version
-        docker build -f Dockerfile -t ${NAME}:${VERSION} -t ${NAME}:latest .
+        docker build -f Dockerfile -t yangwu91/${NAME}:${VERSION} -t yangwu91/${NAME}:latest .
         docker login --username yangwu91 --password $PASSWORD
         docker push yangwu91/${NAME}:latest
         docker push yangwu91/${NAME}:${VERSION}

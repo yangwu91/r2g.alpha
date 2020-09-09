@@ -1,4 +1,5 @@
 ### Custom:
+*.tar.gz
 re-build.sh
 .fuse*
 .idea/

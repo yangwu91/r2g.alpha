@@ -66,16 +66,16 @@ class Trinity:
                 # bufsize=1,
                 # text=True,
             )
-            if self.args['verbose']:
-                if not self.args.get('cleanup', False):
-                    outf = open(self.log, 'w')
-                for line in iter(p.stdout.readline, b''):
-                    line = line.decode('utf-8')
-                    if len(line) == 0:
-                        break
+            for line in iter(p.stdout.readline, b''):
+                line = line.decode('utf-8')
+                if len(line) == 0:
+                    break
+                if self.args['verbose']:
                     sys.stdout.write(line)
-                    if not self.args.get('cleanup', False):
-                        outf.write(line)
+                logs += line
+            if not self.args.get('cleanup', False):
+                with open(self.log, 'w') as outf:
+                    outf.write(logs)
             p.wait()
             if not self.args.get('cleanup', False):
                 outf.close()

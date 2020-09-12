@@ -77,13 +77,13 @@ def parse_arguments(raw_args):
     parser.add_argument("-V", "--version",
                         help="Print the version.",
                         action="version",
-                        version="{}\n{} ({}) Version {}".format(
-                            r2g.__banner__, r2g.__title__, r2g.__full_name__, r2g.__version__)
+                        version="{} ({}) Version {}".format(r2g.__title__, r2g.__full_name__, r2g.__version__)
                         )
     parser.add_argument("-v", "--verbose",
                         help="Print detailed log.",
                         action="store_true",
-                        default=False)
+                        default=False
+                        )
     parser.add_argument("-r", "--retry",
                         help="Number of times to retry."
                              "Enabling it without any numbers will force it to keep retrying. Default: 5.",

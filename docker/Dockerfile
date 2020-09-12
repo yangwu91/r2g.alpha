@@ -1,4 +1,4 @@
-FROM ubuntu:focal-20200720
+FROM ubuntu:focal
 MAINTAINER wuyang@drwu.ga
 
 ARG CONDA_VER=4.8.3
@@ -28,15 +28,12 @@ RUN \
     #============================================
     # customize sources and install chrome, and dependencies
     #============================================
-    #cp -f /tmp/configs/bfsu.sources.list /etc/apt/sources.list && \
     apt update -qqy && \
     apt install -qqy wget gnupg2 zip tzdata xvfb pulseaudio language-pack-en locales supervisor sudo git gosu uuid-runtime && \
     wget -qO - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add - && \
 	echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" > /etc/apt/sources.list.d/google-chrome.list && \
-	# echo "deb [arch=amd64] https://onedrive.drwu.ga/?/google-chrome-mirror/ stable main" > /etc/apt/sources.list.d/google-chrome.list && \
 	apt update -qqy && \
     apt install -qqy  google-chrome-stable && \
-    #sed -i "s,http://mirrors.bfsu.edu.cn,https://mirrors.bfsu.edu.cn,g" /etc/apt/sources.list && \
     bash /tmp/scripts/wrap_chrome_binary.sh && \
 
     #==================================================
@@ -60,7 +57,6 @@ RUN \
     mkdir -p /opt/selenium && \
     touch /opt/selenium/config.json && \
     cp -f /tmp/selenium-server/selenium-server-4.0.0-alpha-6.jar /opt/selenium/selenium-server.jar && \
-    # wget -qO /opt/selenium/selenium-server.jar https://selenium-release.storage.googleapis.com/4.0-alpha-6/selenium-server-4.0.0-alpha-6.jar && \
 
     #======================================
     # relax permissions
@@ -87,24 +83,22 @@ RUN \
     #=====================
     # miniconda3
     #=====================
-    #wget -qO /tmp/miniconda3.sh https://mirrors.bfsu.edu.cn/anaconda/miniconda/Miniconda3-py38_4.8.2-Linux-x86_64.sh && \
     wget -qO /tmp/miniconda3.sh https://repo.anaconda.com/miniconda/Miniconda3-py38_${CONDA_VER}-Linux-x86_64.sh && \
     bash /tmp/miniconda3.sh -bfp /opt/miniconda3 && \
-    #cp -f /tmp/configs/bfsu.condarc ${HOME}/.condarc && \
     conda config --add channels bioconda && \
     conda config --add channels conda-forge && \
     # Trinity, sratoolkit and other dependencies:
     conda install -y python=$PY_VER trinity=$TRINITY_VER sra-tools=$SRA_VER numpy samtools=1.10 && \
     chown -R r2guser /opt/* && \
 
-    #=====================
+	#=====================
     # configure sra-tools>2.10
     #=====================
-    mkdir /opt/ncbi && \
-    chmod 777 /opt/ncbi && \
-    mkdir -p /.ncbi && \
-    chmod 777 /.ncbi && \
-    mkdir -p /root/.ncbi && \
+	mkdir /opt/ncbi && \
+	chmod 777 /opt/ncbi && \
+	mkdir -p /.ncbi && \
+	chmod 777 /.ncbi && \
+	mkdir -p /root/.ncbi && \
     bash /opt/bin/generate_sratools_config.sh > /.ncbi/user-settings.mkfg && \
     bash /opt/bin/generate_sratools_config.sh > /root/.ncbi/user-settings.mkfg && \
 
@@ -134,8 +128,8 @@ RUN \
     #======================
     # pip install r2g && \
     cd /opt && \
-    git clone https://github.com/yangwu91/r2g.dev.git && \
-    cd r2g.dev && \
+    git clone https://github.com/yangwu91/r2g.git && \
+    cd r2g && \
     pip install .[test] && \
     bash /opt/bin/generate_r2g_pathjson.sh > /opt/miniconda3/lib/python3.8/site-packages/r2g/path.json && \
     cd /workspace

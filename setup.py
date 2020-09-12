@@ -12,7 +12,7 @@ setup(
     name='r2g',
     version=version,
     license="MIT",
-    url='https://github.com/yangwu91/r2g.git',
+    url='https://yangwu91.github.io/r2g/',
     author='Yang Wu',
     author_email='wuyang@drwu.ga',
     maintainer="Yang Wu",

@@ -9,10 +9,12 @@
   * [Implementation](#implementation)
      * [Pulling the Docker image (recommended)](#pulling-the-docker-image-recommended)
      * [Installing with Conda channels for Linux users](#installing-with-conda-channels-for-linux-users)
+     * [Installing with Homebrew for macOS users](#installing-with-homebrew-for-macos-users)
      * [Manual installation for all platforms](#manual-installation-for-all-platforms)
         * [Required third-party applications](#required-third-party-applications)
         * [Installing the r2g package](#installing-the-r2g-package)
         * [Setting up the environment](#setting-up-the-environment)
+  * [System requirements](#system-requirements)
   * [Usage](#usage)
      * [Specific options for running the Docker image](#specific-options-for-running-the-docker-image)
      * [An example: finding the "non-existent" <em>S6K</em> gene in a mosquito species](#an-example-finding-the-non-existent-s6k-gene-in-a-mosquito-species)
@@ -26,7 +28,7 @@
 
 <div align=center><img src="https://raw.githubusercontent.com/yangwu91/r2g/master/images/banner.png" alt="banner"/></div>
 
-**Reads to Genes**, or **r2g**, is a computationally lightweight and homology-based pipeline that allows rapid identification of genes or gene families from raw sequence databases in the absence of an assembly, by taking advantage of  over 10,000 terabases of sequencing data for all kinds of species deposited in  [Sequence Read Archive](https://www.ncbi.nlm.nih.gov/sra) hosted by [National Center for Biotechnology Information](https://www.ncbi.nlm.nih.gov/), which can be effectively run on **most common computers without high-end specs**.
+**Reads to Genes**, or **r2g**, is a computationally lightweight and homology-based pipeline that allows rapid identification of genes or gene families from raw sequence databases in the absence of an assembly, by taking advantage of  over [44.3 petabases of sequencing data](https://trace.ncbi.nlm.nih.gov/Traces/sra/sra.cgi) for all kinds of species deposited in  [Sequence Read Archive](https://www.ncbi.nlm.nih.gov/sra) hosted by [National Center for Biotechnology Information](https://www.ncbi.nlm.nih.gov/), which can be effectively run on **most common computers without high-end specs**.
 
 ## Implementation
 
@@ -62,6 +64,13 @@ After that, [Google Chrome web browser](https://www.google.com/chrome/) and the 
 
 In the future, I plan to create a pull request to the Bioconda recipes.
 
+### Installing with Homebrew for macOS users
+
+*TODO*:
+
+- [x] Build Homebrew Formula
+- [ ] Submit to the `brewsci/bio` Tap.
+
 ### Manual installation for all platforms
 
 #### Required third-party applications
@@ -89,7 +98,16 @@ The r2g required 3 third-party software packages including [NCBI SRA Toolkit](ht
 
 2. Trinity
 
-   * Follow the [instruction](https://github.com/trinityrnaseq/trinityrnaseq/wiki/Installing-Trinity) to compile the source code. Please note that Trinity has its own dependencies, including [samtools](https://github.com/samtools/samtools), [Python 3](https://www.python.org/) with [NumPy](https://numpy.org/install/), [bowtie2](http://bowtie-bio.sourceforge.net/bowtie2/index.shtml), [jellyfish](http://www.genome.umd.edu/jellyfish.html), [salmon](https://salmon.readthedocs.io/en/latest/salmon.html), and [trimmomatic](http://www.usadellab.org/cms/?page=trimmomatic). If you are a macOS user while compiling Trinity, please use `gcc` compiler instead of native `clang` complier on macOS to avoid raising errors, which can be installed by `Homebrew Formulae` .
+   * Follow the [instruction](https://github.com/trinityrnaseq/trinityrnaseq/wiki/Installing-Trinity) to compile the source code. Please note that Trinity has its own dependencies, including [samtools](https://github.com/samtools/samtools), [Python 3](https://www.python.org/) with [NumPy](https://numpy.org/install/), [bowtie2](http://bowtie-bio.sourceforge.net/bowtie2/index.shtml), [jellyfish](http://www.genome.umd.edu/jellyfish.html), [salmon](https://salmon.readthedocs.io/en/latest/salmon.html), and [trimmomatic](http://www.usadellab.org/cms/?page=trimmomatic). If you are a macOS user while compiling Trinity, please use `gcc` compiler instead of native `clang` complier on macOS to avoid raising errors.
+
+   * For **macOS** users, Trinity can be installed using Homebrew as well:
+
+     ```bash
+     brew tap brewsci/bio
+     brew install trinity
+     ```
+
+     
 
    * For **Linux** users, Trinity can be installed easily using Conda, and you would never worry about other dependencies:
 
@@ -131,6 +149,10 @@ set PATH=%PATH%;DRIVER:\path\to\fastq-dump;DRIVER:\path\to\Trinity;DRIVER:\path\
 ```
 
 or follow the prompts to set up the path to the executable files manually before the first run. And then, you are good to go.
+
+## System requirements
+
+The recommended minimal hardware specifications are **2-core CPU** and **4 Gb memory**, which are satisfied for most common personal computers nowadays.
 
 ## Usage
 
@@ -189,9 +211,9 @@ While executing the Docker image, some specific options are required: `-v /dev/s
 
 * The option `-v /dev/shm:/dev/shm` shares host's memory to avoid applications crashing inside a Docker container. 
 
-- The option `-v /path/to/your/workspace:/workspace` mounts the local directory `/path/to/your/workspace` (specify your own) to the working directory `/workspace` (don't change it) inside a Docker container, which is the input and output directory.
+- The option `-v /path/to/your/workspace:/workspace` mounts the local directory `/path/to/your/workspace` (specify your own) to the working directory `/workspace` (don't change it) inside a Docker container, **which is the input and output directory**.
 
-- The option `-u $UID` sets the owner of the Docker outputs. Ignoring it will raise permission errors.
+- The option `-u $UID` sets the owner of the Docker outputs. **Ignoring it will raise permission errors**.
 
 Let's say there is a query file in FASTA format named `QUERY.fasta` in the folder `/home/user/r2g_workspace/`. As a result, the the simplest full command to run a Docker image should be:
 

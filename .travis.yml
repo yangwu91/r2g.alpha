@@ -17,5 +17,5 @@ install:
   - echo $(fastq-dump --version)
 
 script:
-  - travis_wait 20 pytest
+  - r2g -o RPS6 -s SRX885420 -q ./examples/S6K/AAEL018120-RE.S6K.fasta --cut 80,50 -p blastn
 

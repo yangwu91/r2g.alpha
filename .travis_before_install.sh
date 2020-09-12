@@ -6,7 +6,6 @@ set -u
 brew tap brewsci/bio
 cp ./brewsci-Formula/r2g.rb /usr/local/Homebrew/Library/Taps/brewsci/homebrew-bio/Formula/
 brew install r2g
-/usr/local/bin/pip3 install pytest
 
 mkdir -p "${HOME}"/.ncbi
 cat > "${HOME}"/.ncbi/user-settings.mkfg <<_EOF

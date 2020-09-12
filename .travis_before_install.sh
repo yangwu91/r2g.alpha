@@ -4,9 +4,7 @@ set -e
 set -u
 
 brew tap brewsci/bio
-brew install wget
-wget https://onedrive.drwu.ga/r2g.rb
-mv r2g.rb /usr/local/Homebrew/Library/Taps/brewsci/homebrew-bio/Formula/
+cp ./brewsci-Formula/r2g.rb /usr/local/Homebrew/Library/Taps/brewsci/homebrew-bio/Formula/
 brew install r2g
 /usr/local/bin/pip3 install pytest
 
@@ -25,5 +23,3 @@ cat > "${HOME}"/.ncbi/user-settings.mkfg <<_EOF
 /repository/user/default-path = "${HOME}/ncbi"
 
 _EOF
-
-conda clean -ayq

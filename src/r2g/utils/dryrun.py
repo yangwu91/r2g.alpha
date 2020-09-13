@@ -25,6 +25,7 @@ class DryRunAction(argparse.Action):
             "-o", output_dir,
             "-c", args['cut'],
             "-p", args['program'],
+            "--verbose",
         ]
         try:
             webdriver_cmd = ["--browser", os.environ["PRIVATE_WEBDRIVER"]]

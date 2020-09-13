@@ -25,7 +25,7 @@ jobs:
         sed -i ".2" "s/^  sha256 \"[0-9a-z]\{64\}\"$/  sha256 \"${SHA}\"/" brewsci-Formula/r2g.rb
         brew tap brewsci/bio
         cp ./brewsci-Formula/r2g.rb /usr/local/Homebrew/Library/Taps/brewsci/homebrew-bio/Formula/
-        cat /usr/local/Homebrew/Library/Taps/brewsci/homebrew-bio/Formula/r2g.rb
+        head -9 /usr/local/Homebrew/Library/Taps/brewsci/homebrew-bio/Formula/r2g.rb
         brew install r2g
         mkdir -p "${HOME}"/.ncbi
         echo "/LIBS/GUID = \"$(uuidgen)\"" > "${HOME}"/.ncbi/user-settings.mkfg

@@ -3,8 +3,8 @@ class R2g < Formula
   include Language::Python::Virtualenv
   desc "A homology-based, computationally lightweight pipeline for discovering genes in the absence of an assembly"
   homepage "https://yangwu91.github.io/r2g/"
-  url "https://test-files.pythonhosted.org/packages/6a/7b/003c8841f129b972160f393126cd50b70660a9322b396e1630c19395de12/r2g-1.0.3a1.tar.gz"
-  sha256 "ad20d56b11415a1c66c7a8295e1de6b1887600b15635baa8e33f2d56ac4c63e7"
+  url "https://test-files.pythonhosted.org/packages/3f/3f/88c69302e16480b0b7bd5dd0c1bda3af429c86792609e7627125f0f69eb5/r2g-1.0.3a2.tar.gz"
+  sha256 "f1d1e001239a15b9a7d2f001503d524f13af7681748a461165084d36c02f3c73"
   license "MIT"
   head "https://github.com/yangwu91/r2g.git"
 

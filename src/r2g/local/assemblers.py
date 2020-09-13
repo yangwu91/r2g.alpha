@@ -57,6 +57,7 @@ class Trinity:
         utils.log("Trinity cmd: {}".format(' '.join(self.cmd)))
         utils.log("Trinity is running. Output dir: {}".format(self.output))
         utils.log("Trinity log file: {}".format(self.log))
+        logs = ""
         try:
             p = subprocess.Popen(
                 self.cmd,
@@ -66,30 +67,28 @@ class Trinity:
                 # bufsize=1,
                 # text=True,
             )
-            logs = ""
-            for line in iter(p.stdout.readline, b''):
-                line = line.decode('utf-8')
-                if len(line) == 0:
-                    break
-                if self.args['verbose']:
-                    sys.stdout.write(line)
-                logs += line
+            with open(self.log, 'w') as outf:
+                for line in iter(p.stdout.readline, b''):
+                    line = line.decode('utf-8')
+                    if len(line) == 0:
+                        break
+                    if self.args['verbose']:
+                        sys.stdout.write(line)
+                    logs += line
+                    outf.write(line)
             p.wait()
             if p.returncode != 0:
                 if not self.args['verbose']:
                     print(logs)
                 raise errors.AssembleError(
                     "Trinity failed. Please check the Trinity log above "
-                    "(or the file {}) for more information.".format(self.log)
+                    "(or the log file {}) for more information.".format(self.log)
                 )
             else:
                 utils.log("Trinity done.")
-            if not self.args.get('cleanup', False):
-                with open(self.log, 'w') as outf:
-                    outf.write(logs)
-            return self.output
+            return self.output, self.log
         except Exception as err:
-            if not self.args['verbose']:
+            if not self.args['verbose'] and len(logs.strip()) > 0:
                 print(logs)
             raise errors.AssembleError("Errors raised when called Trinity. {}. "
                                        "Please check the Trinity log above.".format(err))

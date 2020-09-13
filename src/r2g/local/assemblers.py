@@ -59,26 +59,15 @@ class Trinity:
         utils.log("Trinity log file: {}".format(self.log))
         logs = ""
         try:
-            p = subprocess.Popen(
+            p = subprocess.run(
                 self.cmd,
                 shell=False,
                 stdout=subprocess.PIPE,
-                stderr=subprocess.PIPE,
-                # bufsize=1,
-                # text=True,
+                stderr=subprocess.STDOUT,
             )
-            with open(self.log, 'w') as outf:
-                for line in iter(p.stdout.readline, b''):
-                    line = line.decode('utf-8')
-                    if len(line) == 0:
-                        break
-                    if self.args['verbose']:
-                        sys.stdout.write(line)
-                    logs += line
-                    outf.write(line)
-            p.wait()
+            logs = p.stdout.decode('utf-8')
             if p.returncode != 0:
-                if not self.args['verbose']:
+                if self.args['verbose']:
                     print(logs)
                 raise errors.AssembleError(
                     "Trinity failed. Please check the Trinity log above "
@@ -88,10 +77,14 @@ class Trinity:
                 utils.log("Trinity done.")
             return self.output, self.log
         except Exception as err:
-            if not self.args['verbose'] and len(logs.strip()) > 0:
+            if self.args['verbose'] and len(logs.strip()) > 0:
                 print(logs)
             raise errors.AssembleError("Errors raised when called Trinity. {}. "
                                        "Please check the Trinity log above.".format(err))
+        finally:
+            if len(logs.strip()) > 0:
+                with open(self.log, 'w') as outf:
+                    outf.write(logs)
 
     def copyto(self, final_result):
         if self.args['stage'] == 'chrysalis' or self.args['stage'] == 'butterfly':

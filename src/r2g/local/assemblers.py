@@ -66,6 +66,7 @@ class Trinity:
                 # bufsize=1,
                 # text=True,
             )
+            logs = ""
             for line in iter(p.stdout.readline, b''):
                 line = line.decode('utf-8')
                 if len(line) == 0:
@@ -73,20 +74,23 @@ class Trinity:
                 if self.args['verbose']:
                     sys.stdout.write(line)
                 logs += line
-            if not self.args.get('cleanup', False):
-                with open(self.log, 'w') as outf:
-                    outf.write(logs)
             p.wait()
-            if not self.args.get('cleanup', False):
-                outf.close()
             if p.returncode != 0:
+                if not self.args['verbose']:
+                    print(logs)
                 raise errors.AssembleError(
-                    "Trinity failed. Please check log files {} for more information.".format(self.log)
+                    "Trinity failed. Please check the Trinity log above "
+                    "(or the file {}) for more information.".format(self.log)
                 )
             else:
                 utils.log("Trinity done.")
+            if not self.args.get('cleanup', False):
+                with open(self.log, 'w') as outf:
+                    outf.write(logs)
             return self.output
         except Exception as err:
+            if not self.args['verbose']:
+                print(logs)
             raise errors.AssembleError("Errors raised when called Trinity. {}. "
                                        "Please check the Trinity log above.".format(err))
 

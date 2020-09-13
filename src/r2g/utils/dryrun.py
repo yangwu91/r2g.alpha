@@ -4,6 +4,7 @@ import os
 import subprocess
 import tempfile
 
+import r2g
 from r2g import utils
 
 

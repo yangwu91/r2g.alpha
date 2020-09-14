@@ -24,6 +24,7 @@ jobs:
 #      shell: powershell
     - name: Pull Docker image and run a quick test 2
       run: |
+        tree "c:\Program Files\Docker"
         "c:\Program Files\Docker\DockerCli.exe" -SwitchLinuxEngine
         docker pull yangwu91/r2g.docker.test:latest
         docker run -it yangwu91/r2g.docker.test:latest --dry-run

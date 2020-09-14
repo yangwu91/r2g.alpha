@@ -14,10 +14,8 @@ jobs:
       run : |
         Set-Content -Value "`{`"experimental`":true`}" -Path C:\ProgramData\docker\config\daemon.json
         restart-service docker
-        winpty docker run hello-world
-        winpty docker run -it hello-world
         docker pull yangwu91/r2g.docker.test:latest
-        winpty docker run -it --platform=linux yangwu91/r2g.docker.test:latest --dry-run
+        winpty docker run --platform=linux yangwu91/r2g.docker.test:latest --dry-run
       shell: powershell
 #    - name: Pull Docker image and run a quick test 2
 #      run: |

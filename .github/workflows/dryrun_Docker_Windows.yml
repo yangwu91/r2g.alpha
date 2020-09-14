@@ -1,7 +1,8 @@
 name: Run a quick test using Docker on Windows
 
 on:
-  push
+  repository_dispatch:
+    types: [trigger-dryrun-docker]
 
 jobs:
   deploy:
@@ -10,8 +11,8 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
-    - name: Pull Docker image and run a quick test 1
-      run : |
+    - name: Pull Docker image and run a quick test
+      run: |
         Set-Content -Value "`{`"experimental`":true`}" -Path C:\ProgramData\docker\config\daemon.json
         cd 'C:\Program Files\'
         mkdir "Linux Containers"
@@ -23,10 +24,3 @@ jobs:
         docker pull yangwu91/r2g.docker.test:latest
         docker run --platform=linux yangwu91/r2g.docker.test:latest --dry-run
       shell: powershell
-#    - name: Pull Docker image and run a quick test 2
-#      run: |
-#        tree "c:\Program Files\Docker"
-#        "c:\Program Files\Docker\DockerCli.exe" -SwitchLinuxEngine
-#        docker pull yangwu91/r2g.docker.test:latest
-#        docker run -it yangwu91/r2g.docker.test:latest --dry-run
-#      shell: cmd

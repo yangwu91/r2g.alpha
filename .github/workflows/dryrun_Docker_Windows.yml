@@ -24,9 +24,8 @@ jobs:
         docker run -it --platform=linux yangwu91/r2g.docker.test:latest --dry-run
       shell: powershell
     - name: Pull Docker image and run a quick test 2
-        run: |
-          c:\Program Files\Docker\DockerCli.exe -SwitchLinuxEngine
-          docker pull yangwu91/r2g.docker.test:latest
-          docker run -it --platform=linux yangwu91/r2g.docker.test:latest --dry-run
-        shell: cmd
-
+      run: |
+        c:\Program Files\Docker\DockerCli.exe -SwitchLinuxEngine
+        docker pull yangwu91/r2g.docker.test:latest
+        docker run -it --platform=linux yangwu91/r2g.docker.test:latest --dry-run
+      shell: cmd

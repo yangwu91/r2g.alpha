@@ -13,6 +13,12 @@ jobs:
     - name: Pull Docker image and run a quick test 1
       run : |
         Set-Content -Value "`{`"experimental`":true`}" -Path C:\ProgramData\docker\config\daemon.json
+        cd 'C:\Program Files\'
+        mkdir "Linux Containers"
+        cd '.\Linux Containers\'
+        curl -OutFile release.zip https://github.com/linuxkit/lcow/releases/download/v4.14.35-v0.3.9/release.zip
+        Expand-Archive -DestinationPath . .\release.zip
+        rm release.zip
         restart-service docker
         docker pull yangwu91/r2g.docker.test:latest
         docker run --platform=linux yangwu91/r2g.docker.test:latest --dry-run

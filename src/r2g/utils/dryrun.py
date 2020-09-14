@@ -38,7 +38,7 @@ class DryRunAction(argparse.Action):
         except subprocess.TimeoutExpired as err:
             err += "\nThe quick test is supposed to finished in 10 minutes. Aborted."
             exit_code = 2
-        except Exceptions as err:
+        except Exception as err:
             exit_code = 3
         else:
             exit_code = p.returncode
@@ -49,6 +49,6 @@ class DryRunAction(argparse.Action):
                 "Make sure the r2g was installed and configured correctly"
             )
         else:
-            utils.log("The quick test done. Please feed me something real :)")
+            utils.log("The quick test done. Please feed me something real 😋")
         utils.delete_everything(output_dir)
         sys.exit(exit_code)

@@ -31,11 +31,11 @@ jobs:
     - name: Trigger dryrun using Homebrew on macOS
       if: success()
       uses: peter-evans/repository-dispatch@v1
-        with:
-          token: ${{ secrets.REPO_GHA_PAT }}
-          repository: ${{ github.repository }}
-          event-type: trigger-dryrun-homebrew
-          client-payload: '{"ref": "${{ github.ref }}", "sha": "${{ github.sha }}"}'
+      with:
+        token: ${{ secrets.REPO_GHA_PAT }}
+        repository: ${{ github.repository }}
+        event-type: trigger-dryrun-homebrew
+        client-payload: '{"ref": "${{ github.ref }}", "sha": "${{ github.sha }}"}'
     - name: Build and publish to custom Conda channel
       env:
         ANACONDA_API_TOKEN: ${{ secrets.ANACONDA_TOKEN }}
@@ -59,11 +59,11 @@ jobs:
     - name: Trigger dryrun using Conda on Linux
       if: success()
       uses: peter-evans/repository-dispatch@v1
-        with:
-          token: ${{ secrets.REPO_GHA_PAT }}
-          repository: ${{ github.repository }}
-          event-type: trigger-dryrun-conda
-          client-payload: '{"ref": "${{ github.ref }}", "sha": "${{ github.sha }}"}'
+      with:
+        token: ${{ secrets.REPO_GHA_PAT }}
+        repository: ${{ github.repository }}
+        event-type: trigger-dryrun-conda
+        client-payload: '{"ref": "${{ github.ref }}", "sha": "${{ github.sha }}"}'
     - name: Docker build and push
       env:
         VERSION: ${{ env.VERSION }}
@@ -81,8 +81,8 @@ jobs:
     - name: Trigger dryrun using Conda on Linux
       if: success()
       uses: peter-evans/repository-dispatch@v1
-        with:
-          token: ${{ secrets.REPO_GHA_PAT }}
-          repository: ${{ github.repository }}
-          event-type: trigger-dryrun-docker
-          client-payload: '{"ref": "${{ github.ref }}", "sha": "${{ github.sha }}"}'
+      with:
+        token: ${{ secrets.REPO_GHA_PAT }}
+        repository: ${{ github.repository }}
+        event-type: trigger-dryrun-docker
+        client-payload: '{"ref": "${{ github.ref }}", "sha": "${{ github.sha }}"}'

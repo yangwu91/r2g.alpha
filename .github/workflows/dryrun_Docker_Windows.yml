@@ -15,7 +15,7 @@ jobs:
         Set-Content -Value "`{`"experimental`":true`}" -Path C:\ProgramData\docker\config\daemon.json
         restart-service docker
         docker pull yangwu91/r2g.docker.test:latest
-        winpty docker run --platform=linux yangwu91/r2g.docker.test:latest --dry-run
+        docker run --platform=linux yangwu91/r2g.docker.test:latest --dry-run
       shell: powershell
 #    - name: Pull Docker image and run a quick test 2
 #      run: |

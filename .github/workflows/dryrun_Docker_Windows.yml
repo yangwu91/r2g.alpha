@@ -1,8 +1,7 @@
 name: Run a quick test using Docker on Windows
 
 on:
-  repository_dispatch:
-    types: [trigger-dryrun-docker]
+  push
 
 jobs:
   deploy:
@@ -25,7 +24,7 @@ jobs:
 #      shell: powershell
     - name: Pull Docker image and run a quick test 2
       run: |
-        c:\Program Files\Docker\DockerCli.exe -SwitchLinuxEngine
+        "c:\Program Files\Docker\DockerCli.exe" -SwitchLinuxEngine
         docker pull yangwu91/r2g.docker.test:latest
-        docker run -it --platform=linux yangwu91/r2g.docker.test:latest --dry-run
+        docker run -it yangwu91/r2g.docker.test:latest --dry-run
       shell: cmd

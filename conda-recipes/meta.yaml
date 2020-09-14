@@ -2,7 +2,8 @@
 {% set version = "0.0.0" %}
 
 package:
-  name: "{{ name|lower }}"
+  # name: "{{ name|lower }}"
+  name: r2g.dev
   version: "{{ version }}"
 
 source:

@@ -84,7 +84,7 @@ jobs:
         docker push yangwu91/${NAME}:latest
         docker push yangwu91/${NAME}:${VERSION}
         docker logout
-    - name: Trigger dryrun using Conda on Linux
+    - name: Trigger dryrun using Docker on Windows
       if: success()
       uses: peter-evans/repository-dispatch@v1
       with:

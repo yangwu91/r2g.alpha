@@ -69,10 +69,7 @@ class Trinity:
             if p.returncode != 0:
                 if self.args['verbose']:
                     print(logs)
-                raise errors.AssembleError(
-                    "Trinity failed. Please check the Trinity log above "
-                    "(or the log file {}) for more information.".format(self.log)
-                )
+                raise errors.AssembleError("Trinity exited {}.".format(p.returncode))
             else:
                 utils.log("Trinity done.")
             return self.output, self.log

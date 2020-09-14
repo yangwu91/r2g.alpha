@@ -1,7 +1,8 @@
 name: Run a quick test using Docker on Windows
 
 on:
-  push
+  repository_dispatch:
+    types: [trigger-dryrun-docker]
 
 jobs:
   deploy:

@@ -27,7 +27,15 @@ jobs:
         TWINE_PASSWORD: ${{ secrets.TESTPYPI_TOKEN }}
       run: |
         python setup.py sdist bdist_wheel
-        twine upload --repository-url https://test.pypi.org/legacy/ dist/*
+        echo $(twine upload --repository-url https://test.pypi.org/legacy/ dist/*)
+    - name: Trigger dryrun using Homebrew on macOS
+      if: success()
+      uses: peter-evans/repository-dispatch@v1
+        with:
+          token: ${{ secrets.REPO_GHA_PAT }}
+          repository: ${{ github.repository }}
+          event-type: trigger-dryrun-homebrew
+          client-payload: '{"ref": "${{ github.ref }}", "sha": "${{ github.sha }}"}'
     - name: Build and publish to custom Conda channel
       env:
         ANACONDA_API_TOKEN: ${{ secrets.ANACONDA_TOKEN }}
@@ -48,6 +56,14 @@ jobs:
         /opt/miniconda3/bin/conda build -c conda-forge -c bioconda --output-folder conda-recipes conda-recipes
         /opt/miniconda3/bin/anaconda upload -p ${PKG} -u yangwu91 --label main -v $VERSION $(ls conda-recipes/noarch/$r2g-*.tar.bz2)
 #        /opt/miniconda3/bin/anaconda logout
+    - name: Trigger dryrun using Conda on Linux
+      if: success()
+      uses: peter-evans/repository-dispatch@v1
+        with:
+          token: ${{ secrets.REPO_GHA_PAT }}
+          repository: ${{ github.repository }}
+          event-type: trigger-dryrun-conda
+          client-payload: '{"ref": "${{ github.ref }}", "sha": "${{ github.sha }}"}'
     - name: Docker build and push
       env:
         VERSION: ${{ env.VERSION }}
@@ -62,3 +78,11 @@ jobs:
         docker push yangwu91/${NAME}:latest
         docker push yangwu91/${NAME}:${VERSION}
         docker logout
+    - name: Trigger dryrun using Conda on Linux
+      if: success()
+      uses: peter-evans/repository-dispatch@v1
+        with:
+          token: ${{ secrets.REPO_GHA_PAT }}
+          repository: ${{ github.repository }}
+          event-type: trigger-dryrun-docker
+          client-payload: '{"ref": "${{ github.ref }}", "sha": "${{ github.sha }}"}'
